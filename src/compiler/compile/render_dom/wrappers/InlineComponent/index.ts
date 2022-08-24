@@ -149,7 +149,7 @@ export default class InlineComponentWrapper extends Wrapper {
 			}
 		}
 
-		const has_css_custom_properties = this.node.css_custom_properties.length > 0;
+		const has_css_custom_properties = true;
 		const css_custom_properties_wrapper = has_css_custom_properties ? block.get_unique_name('div') : null;
 		if (has_css_custom_properties) {
 			block.add_variable(css_custom_properties_wrapper);
@@ -503,6 +503,7 @@ export default class InlineComponentWrapper extends Wrapper {
 			if (has_css_custom_properties) {
 				block.chunks.create.push(b`${css_custom_properties_wrapper} = @element("div");`);
 				block.chunks.hydrate.push(b`@set_style(${css_custom_properties_wrapper}, "display", "contents");`);
+				block.chunks.hydrate.push(b`@set_attributes(${css_custom_properties_wrapper}, { class: "${this.node.component.stylesheet.id} ${this.node.name}" });`);
 				this.node.css_custom_properties.forEach(attr => {
 					const dependencies = attr.get_dependencies();
 					const should_cache = attr.should_cache();

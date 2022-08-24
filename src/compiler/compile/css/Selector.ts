@@ -122,7 +122,12 @@ export default class Selector {
 			if (block.global) {
 				remove_global_pseudo_class(block.selectors[0]);
 			}
-			if (block.should_encapsulate) encapsulate_block(block, index === this.blocks.length - 1 ? attr.repeat(amount_class_specificity_to_increase + 1) : attr);
+			if (block.selectors.some((selector) => {
+				const nameFirstChar = (selector as any).name[0];
+				return nameFirstChar.toUpperCase() === nameFirstChar;
+			})) {
+				encapsulate_block(block, `${attr}>*`);
+			} else if (block.should_encapsulate) encapsulate_block(block, index === this.blocks.length - 1 ? attr.repeat(amount_class_specificity_to_increase + 1) : attr);
 		});
 	}
 
@@ -283,6 +288,8 @@ function apply_selector(blocks: Block[], node: Element, to_encapsulate: Array<{ 
 
 function block_might_apply_to_node(block: Block, node: Element): BlockAppliesToNode {
 	let i = block.selectors.length;
+
+	return BlockAppliesToNode.Possible;
 
 	while (i--) {
 		const selector = block.selectors[i];

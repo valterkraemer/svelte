@@ -87,15 +87,13 @@ export default function(node: InlineComponent, renderer: Renderer, options: Rend
 		${slot_fns}
 	}`;
 
-	if (node.css_custom_properties.length > 0) {
-		renderer.add_string('<div style="display: contents;');
-		node.css_custom_properties.forEach(attr => {
-			renderer.add_string(` ${attr.name}:`);
-			renderer.add_expression(get_attribute_value(attr));
-			renderer.add_string(';');
-		});
-		renderer.add_string('">');
-	}
+	renderer.add_string(`<div class="${node.component.stylesheet.id} ${node.name}" style="display: contents;`);
+	node.css_custom_properties.forEach(attr => {
+		renderer.add_string(` ${attr.name}:`);
+		renderer.add_expression(get_attribute_value(attr));
+		renderer.add_string(';');
+	});
+	renderer.add_string('">');
 
 	renderer.add_expression(x`@validate_component(${expression}, "${node.name}").$$render($$result, ${props}, ${bindings}, ${slots})`);
 
