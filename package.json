@@ -15,25 +15,14 @@
   },
   "scripts": {
     "build": "pnpm -r --filter=./packages/* build",
-    "build:sites": "pnpm -r --filter=./sites/* build",
-    "preview-site": "npm run build --prefix sites/svelte-5-preview",
     "check": "cd packages/svelte && pnpm build && cd ../../ && pnpm -r check",
     "lint": "eslint && prettier --check .",
     "format": "prettier --write .",
-    "test": "vitest run",
-    "test-output": "vitest run --coverage --reporter=json --outputFile=sites/svelte-5-preview/src/routes/status/results.json",
-    "changeset:version": "changeset version && pnpm -r generate:version && git add --all",
-    "changeset:publish": "changeset publish",
-    "bench": "node --allow-natives-syntax ./benchmarking/run.js",
-    "bench:compare": "node --allow-natives-syntax ./benchmarking/compare/index.js",
-    "bench:debug": "node --allow-natives-syntax --inspect-brk ./benchmarking/run.js"
+    "test": "vitest run"
   },
   "devDependencies": {
-    "@changesets/cli": "^2.27.8",
     "@sveltejs/eslint-config": "^8.1.0",
-    "@svitejs/changesets-changelog-github-compact": "^1.1.0",
     "@types/node": "^20.11.5",
-    "@vitest/coverage-v8": "^2.0.5",
     "eslint": "^9.9.1",
     "eslint-plugin-lube": "^0.4.3",
     "jsdom": "25.0.1",
@@ -43,7 +32,6 @@
     "svelte": "workspace:^",
     "typescript": "^5.5.4",
     "typescript-eslint": "^8.2.0",
-    "v8-natives": "^1.2.5",
     "vitest": "^2.0.5"
   }
 }

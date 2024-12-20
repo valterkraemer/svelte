@@ -64,8 +64,6 @@ In a future version of Svelte, self-closing tags may be upgraded from a warning 
 
 > Using `on:%name%` to listen to the %name% event is deprecated. Use the event attribute `on%name%` instead
 
-See [the migration guide](v5-migration-guide#Event-changes) for more info.
-
 ## node_invalid_placement_ssr
 
 > %message%. When rendering this component on the server, the resulting HTML will be modified by the browser (by moving, removing, or inserting elements), likely resulting in a `hydration_mismatch` warning
@@ -95,8 +93,6 @@ This code will work when the component is rendered on the client (which is why t
 ## slot_element_deprecated
 
 > Using `<slot>` to render parent content is deprecated. Use `{@render ...}` tags instead
-
-See [the migration guide](v5-migration-guide#Snippets-instead-of-slots) for more info.
 
 ## svelte_component_deprecated
 

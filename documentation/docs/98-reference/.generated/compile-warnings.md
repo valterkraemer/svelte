@@ -662,8 +662,6 @@ In a future version of Svelte, self-closing tags may be upgraded from a warning 
 Using `on:%name%` to listen to the %name% event is deprecated. Use the event attribute `on%name%` instead
 ```
 
-See [the migration guide](v5-migration-guide#Event-changes) for more info.
-
 ### export_let_unused
 
 ```
@@ -681,8 +679,6 @@ Component has unused export property '%name%'. If it is for external reference o
 ```
 Svelte 5 components are no longer classes. Instantiate them using `mount` or `hydrate` (imported from 'svelte') instead.
 ```
-
-See the [migration guide](v5-migration-guide#Components-are-no-longer-classes) for more info.
 
 ### node_invalid_placement_ssr
 
@@ -817,8 +813,6 @@ Unrecognized attribute — should be one of `generics`, `lang` or `module`. If t
 ```
 Using `<slot>` to render parent content is deprecated. Use `{@render ...}` tags instead
 ```
-
-See [the migration guide](v5-migration-guide#Snippets-instead-of-slots) for more info.
 
 ### state_referenced_locally
 

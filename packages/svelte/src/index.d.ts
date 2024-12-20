@@ -5,7 +5,6 @@ import './ambient.js';
 /**
  * @deprecated In Svelte 4, components are classes. In Svelte 5, they are functions.
  * Use `mount` instead to instantiate components.
- * See [migration guide](https://svelte.dev/docs/svelte/v5-migration-guide#Components-are-no-longer-classes)
  * for more info.
  */
 export interface ComponentConstructorOptions<
@@ -39,7 +38,6 @@ type Properties<Props, Slots> = Props &
  * This was the base class for Svelte components in Svelte 4. Svelte 5+ components
  * are completely different under the hood. For typing, use `Component` instead.
  * To instantiate components, use `mount` instead.
- * See [migration guide](https://svelte.dev/docs/svelte/v5-migration-guide#Components-are-no-longer-classes) for more info.
  */
 export class SvelteComponent<
 	Props extends Record<string, any> = Record<string, any>,
@@ -52,8 +50,7 @@ export class SvelteComponent<
 	[prop: string]: any;
 	/**
 	 * @deprecated This constructor only exists when using the `asClassComponent` compatibility helper, which
-	 * is a stop-gap solution. Migrate towards using `mount` instead. See
-	 * [migration guide](https://svelte.dev/docs/svelte/v5-migration-guide#Components-are-no-longer-classes) for more info.
+	 * is a stop-gap solution. Migrate towards using `mount` instead.
 	 */
 	constructor(options: ComponentConstructorOptions<Properties<Props, Slots>>);
 	/**
@@ -83,15 +80,13 @@ export class SvelteComponent<
 
 	/**
 	 * @deprecated This method only exists when using one of the legacy compatibility helpers, which
-	 * is a stop-gap solution. See [migration guide](https://svelte.dev/docs/svelte/v5-migration-guide#Components-are-no-longer-classes)
-	 * for more info.
+	 * is a stop-gap solution.
 	 */
 	$destroy(): void;
 
 	/**
 	 * @deprecated This method only exists when using one of the legacy compatibility helpers, which
-	 * is a stop-gap solution. See [migration guide](https://svelte.dev/docs/svelte/v5-migration-guide#Components-are-no-longer-classes)
-	 * for more info.
+	 * is a stop-gap solution.
 	 */
 	$on<K extends Extract<keyof Events, string>>(
 		type: K,
@@ -100,8 +95,7 @@ export class SvelteComponent<
 
 	/**
 	 * @deprecated This method only exists when using one of the legacy compatibility helpers, which
-	 * is a stop-gap solution. See [migration guide](https://svelte.dev/docs/svelte/v5-migration-guide#Components-are-no-longer-classes)
-	 * for more info.
+	 * is a stop-gap solution.
 	 */
 	$set(props: Partial<Props>): void;
 }
@@ -153,14 +147,12 @@ export interface Component<
 	): {
 		/**
 		 * @deprecated This method only exists when using one of the legacy compatibility helpers, which
-		 * is a stop-gap solution. See [migration guide](https://svelte.dev/docs/svelte/v5-migration-guide#Components-are-no-longer-classes)
-		 * for more info.
+		 * is a stop-gap solution.
 		 */
 		$on?(type: string, callback: (e: any) => void): () => void;
 		/**
 		 * @deprecated This method only exists when using one of the legacy compatibility helpers, which
-		 * is a stop-gap solution. See [migration guide](https://svelte.dev/docs/svelte/v5-migration-guide#Components-are-no-longer-classes)
-		 * for more info.
+		 * is a stop-gap solution.
 		 */
 		$set?(props: Partial<Props>): void;
 	} & Exports;
@@ -171,7 +163,7 @@ export interface Component<
 }
 
 /**
- * @deprecated Use `Component` instead. See [migration guide](https://svelte.dev/docs/svelte/v5-migration-guide#Components-are-no-longer-classes) for more information.
+ * @deprecated Use `Component` instead.
  */
 export class SvelteComponentTyped<
 	Props extends Record<string, any> = Record<string, any>,

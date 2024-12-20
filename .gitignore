@@ -4,10 +4,6 @@ node_modules/
 # IDE related
 .idea
 
-# Test coverage
-coverage
-*.lcov
-
 # Optional eslint cache
 .eslintcache
 
@@ -23,4 +19,3 @@ coverage
 
 tmp
 
-benchmarking/compare/.results

@@ -42,6 +42,5 @@ sites/svelte.dev/src/lib/generated
 **/.vercel
 .github/CODEOWNERS
 .prettierignore
-.changeset
 pnpm-lock.yaml
 pnpm-workspace.yaml

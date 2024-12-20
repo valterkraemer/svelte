@@ -93,8 +93,6 @@ export default [
 			'packages/svelte/src/internal/shared/warnings.js',
 			'packages/svelte/compiler/index.js',
 			// stuff we don't want to lint
-			'benchmarking/**',
-			'coverage/**',
 			'playgrounds/sandbox/**',
 			// exclude top level config files
 			'*.config.js',
