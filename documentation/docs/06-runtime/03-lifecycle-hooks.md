@@ -13,8 +13,6 @@ In Svelte 5, the component lifecycle consists of only two parts: Its creation an
 
 The `onMount` function schedules a callback to run as soon as the component has been mounted to the DOM. It must be called during the component's initialisation (but doesn't need to live _inside_ the component; it can be called from an external module).
 
-`onMount` does not run inside a component that is rendered on the server.
-
 ```svelte
 <script>
 	import { onMount } from 'svelte';
@@ -48,8 +46,6 @@ If a function is returned from `onMount`, it will be called when the component i
 > EXPORT_SNIPPET: svelte#onDestroy
 
 Schedules a callback to run immediately before the component is unmounted.
-
-Out of `onMount`, `beforeUpdate`, `afterUpdate` and `onDestroy`, this is the only one that runs inside a server-side component.
 
 ```svelte
 <script>

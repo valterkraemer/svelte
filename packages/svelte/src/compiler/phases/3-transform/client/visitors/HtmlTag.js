@@ -11,7 +11,7 @@ import * as b from '../../../../utils/builders.js';
 export function HtmlTag(node, context) {
 	context.state.template.push('<!>');
 
-	// push into init, so that bindings run afterwards, which might trigger another run and override hydration
+	// push into init, so that bindings run afterwards, which might trigger another run
 	context.state.init.push(
 		b.stmt(
 			b.call(
@@ -19,8 +19,7 @@ export function HtmlTag(node, context) {
 				context.state.node,
 				b.thunk(/** @type {Expression} */ (context.visit(node.expression))),
 				b.literal(context.state.metadata.namespace === 'svg'),
-				b.literal(context.state.metadata.namespace === 'mathml'),
-				is_ignored(node, 'hydration_html_changed') && b.true
+				b.literal(context.state.metadata.namespace === 'mathml')
 			)
 		)
 	);

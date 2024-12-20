@@ -64,53 +64,6 @@ export default test({
 			<p>Gamma</p>
 		</div>
 	`,
-	ssrHtml: `
-		<div>
-			<label>
-				<input type="checkbox" value="[object Object]"> Alpha
-			</label>
-
-			<label>
-				<input type="checkbox" value="[object Object]" checked> Beta
-			</label>
-
-			<label>
-				<input type="checkbox" value="[object Object]"> Gamma
-			</label>
-
-			<p>Beta</p>
-		</div>
-		<div>
-			<label>
-				<input type="checkbox" value="[object Object]"> Alpha
-			</label>
-
-			<label>
-				<input type="checkbox" value="[object Object]"> Beta
-			</label>
-
-			<label>
-				<input type="checkbox" value="[object Object]"> Gamma
-			</label>
-
-			<p></p>
-		</div>
-		<div>
-			<label>
-				<input type="checkbox" value="[object Object]"> Alpha
-			</label>
-
-			<label>
-				<input type="checkbox" value="[object Object]"> Beta
-			</label>
-
-			<label>
-				<input type="checkbox" value="[object Object]" checked> Gamma
-			</label>
-
-			<p>Gamma</p>
-		</div>
-	`,
 	test({ assert, component, target, window }) {
 		const inputs = target.querySelectorAll('input');
 

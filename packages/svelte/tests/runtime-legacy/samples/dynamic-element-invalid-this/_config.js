@@ -1,7 +1,7 @@
 import { test } from '../../test';
 
 export default test({
-	mode: ['client', 'server'], // SSR errors on render already
+	mode: ['client'], // SSR errors on render already
 
 	compileOptions: {
 		dev: true

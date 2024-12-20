@@ -8,12 +8,6 @@ export default test({
 		<p>10 of 10</p>
 	`,
 
-	ssrHtml: `
-		<button></button>
-		<input type=range min=0 max=10 value=10>
-		<p>10 of 10</p>
-	`,
-
 	test({ assert, target, window }) {
 		const input = target.querySelector('input');
 		ok(input);

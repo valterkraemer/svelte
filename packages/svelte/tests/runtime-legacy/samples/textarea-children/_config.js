@@ -1,7 +1,7 @@
 import { test } from '../../test';
 
 export default test({
-	mode: ['client', 'hydrate'], // SSR behaviour is awkwardly different
+	mode: ['client'], // SSR behaviour is awkwardly different
 
 	get props() {
 		return { foo: 42 };

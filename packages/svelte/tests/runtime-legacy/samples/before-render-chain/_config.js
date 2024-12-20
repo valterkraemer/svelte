@@ -1,7 +1,7 @@
 import { test } from '../../test';
 
 export default test({
-	mode: ['client', 'hydrate'],
+	mode: ['client'],
 
 	html: `
 		<span>3</span>

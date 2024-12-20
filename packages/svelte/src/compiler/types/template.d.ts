@@ -53,7 +53,7 @@ export namespace AST {
 			 */
 			transparent: boolean;
 			/**
-			 * Whether or not we need to traverse into the fragment during mount/hydrate
+			 * Whether or not we need to traverse into the fragment during mount
 			 */
 			dynamic: boolean;
 		};

@@ -5,11 +5,6 @@ export default test({
 		return { name: 'world' };
 	},
 
-	ssrHtml: `
-		<editor contenteditable="true">world</editor>
-		<p>hello world</p>
-	`,
-
 	async test({ assert, component, target, window }) {
 		// JSDom doesn't support innerText yet, so the test is not ideal
 		// https://github.com/jsdom/jsdom/issues/1245

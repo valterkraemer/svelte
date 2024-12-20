@@ -2,7 +2,7 @@ import { ok, test } from '../../test';
 import { flushSync } from 'svelte';
 
 export default test({
-	mode: ['client', 'hydrate'], // relies on onMount firing, which does not happen in SSR mode
+	mode: ['client'], // relies on onMount firing, which does not happen in SSR mode
 
 	get props() {
 		return { count: 3 };

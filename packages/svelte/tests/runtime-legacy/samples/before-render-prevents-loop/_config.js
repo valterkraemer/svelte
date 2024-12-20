@@ -1,8 +1,6 @@
 import { test } from '../../test';
 
 export default test({
-	skip_mode: ['server'],
-
 	get props() {
 		return { value: 'hello!' };
 	},

@@ -8,44 +8,34 @@ export default function Skip_static_subtree($$anchor, $$props) {
 	var main = $.sibling($.first_child(fragment), 2);
 	var h1 = $.child(main);
 	var text = $.child(h1, true);
-
-	$.reset(h1);
-
 	var node = $.sibling(h1, 10);
 
 	$.html(node, () => $$props.content, false, false);
-	$.next(14);
-	$.reset(main);
 
 	var cant_skip = $.sibling(main, 2);
 	var custom_elements = $.child(cant_skip);
 
 	$.set_custom_element_data(custom_elements, "with", "attributes");
-	$.reset(cant_skip);
 
 	var div = $.sibling(cant_skip, 2);
 	var input = $.child(div);
 
 	$.autofocus(input, true);
-	$.reset(div);
 
 	var div_1 = $.sibling(div, 2);
 	var source = $.child(div_1);
 
 	source.muted = true;
-	$.reset(div_1);
 
 	var select = $.sibling(div_1, 2);
 	var option = $.child(select);
 
 	option.value = null == (option.__value = "a") ? "" : "a";
-	$.reset(select);
 
 	var img = $.sibling(select, 2);
 	var div_2 = $.sibling(img, 2);
 	var img_1 = $.child(div_2);
 
-	$.reset(div_2);
 	$.template_effect(() => $.set_text(text, $$props.title));
 	$.handle_lazy_img(img);
 	$.handle_lazy_img(img_1);

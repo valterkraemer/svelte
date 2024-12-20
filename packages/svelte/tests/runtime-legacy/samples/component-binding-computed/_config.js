@@ -5,10 +5,6 @@ export default test({
 		<label>firstname <input></label>
 		<label>lastname <input></label>
 	`,
-	ssrHtml: `
-		<label>firstname <input value=""></label>
-		<label>lastname <input value=""></label>
-	`,
 
 	async test({ assert, component, target, window }) {
 		const input = new window.Event('input');

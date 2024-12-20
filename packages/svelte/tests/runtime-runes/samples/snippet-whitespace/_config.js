@@ -7,8 +7,5 @@ export default test({
 	withoutNormalizeHtml: 'only-strip-comments',
 	html: `A B C D <pre>Testing
 123          ;
-    456</pre>`,
-	ssrHtml: `A B C D <pre>Testing
-123          ;
     456</pre>`
 });

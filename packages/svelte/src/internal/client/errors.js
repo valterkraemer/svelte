@@ -184,21 +184,6 @@ export function effect_update_depth_exceeded() {
 }
 
 /**
- * Failed to hydrate the application
- * @returns {never}
- */
-export function hydration_failed() {
-	if (DEV) {
-		const error = new Error(`hydration_failed\nFailed to hydrate the application\nhttps://svelte.dev/e/hydration_failed`);
-
-		error.name = 'Svelte error';
-		throw error;
-	} else {
-		throw new Error(`https://svelte.dev/e/hydration_failed`);
-	}
-}
-
-/**
  * Could not `{@render}` snippet due to the expression being `null` or `undefined`. Consider using optional chaining `{@render snippet?.()}`
  * @returns {never}
  */

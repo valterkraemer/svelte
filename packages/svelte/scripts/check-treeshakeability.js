@@ -118,15 +118,6 @@ const bundle = await bundle_code(
 	).js.code
 );
 
-if (!bundle.includes('hydrate_node') && !bundle.includes('hydrate_next')) {
-	// eslint-disable-next-line no-console
-	console.error(`✅ Hydration code treeshakeable`);
-} else {
-	failed = true;
-	// eslint-disable-next-line no-console
-	console.error(`❌ Hydration code not treeshakeable`);
-}
-
 if (!bundle.includes('component_context.l')) {
 	// eslint-disable-next-line no-console
 	console.error(`✅ Legacy code treeshakeable`);

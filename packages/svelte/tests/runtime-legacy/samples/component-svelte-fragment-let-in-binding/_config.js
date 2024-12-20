@@ -9,14 +9,6 @@ export default test({
 		</div>
 	`,
 
-	ssrHtml: `
-		<div>
-			<label>1: <input value="a"></label>
-			<label>2: <input value="b"></label>
-			<label>3: <input value="c"></label>
-		</div>
-	`,
-
 	async test({ assert, component, target, window }) {
 		const inputs = target.querySelectorAll('input');
 

@@ -5,7 +5,7 @@ export default test({
 		dev: true
 	},
 
-	skip_mode: ['hydrate'],
+	skip_mode: [],
 
 	warnings: [
 		'The `render` function passed to `createRawSnippet` should return HTML for a single element'

@@ -14,9 +14,5 @@ export default test({
 		assert.htmlEqual(target.innerHTML, '<h1>42</h1>');
 
 		assert.equal(store.numberOfTimesSubscribeCalled(), 1);
-	},
-	test_ssr({ assert }) {
-		assert.equal(store.numberOfTimesSubscribeCalled(), 1);
-		assert.equal(store.isSubscribed(), false);
 	}
 });

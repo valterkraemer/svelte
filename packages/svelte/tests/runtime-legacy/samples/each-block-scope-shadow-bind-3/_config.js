@@ -15,18 +15,6 @@ export default test({
 		</div>
 	`,
 
-	ssrHtml: `
-		<div>
-			Hello World
-			<input value="Hello"/>
-			<input value="World"/>
-		</div>
-		<div>
-			Sapper App
-			<input value="Sapper"/>
-			<input value="App"/>
-		</div>
-	`,
 	test({ assert, target, window }) {
 		const [input1, input2, input3, input4] = target.querySelectorAll('input');
 		input1.value = 'Awesome';

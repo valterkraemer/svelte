@@ -381,15 +381,7 @@ export function RegularElement(node, context) {
 		/** @type {Expression} */
 		let arg = context.state.node;
 
-		// If `hydrate_node` is set inside the element, we need to reset it
-		// after the element has been hydrated
-		let needs_reset = trimmed.some((node) => node.type !== 'Text');
-
-		// The same applies if it's a `<template>` element, since we need to
-		// set the value of `hydrate_node` to `node.content`
 		if (node.name === 'template') {
-			needs_reset = true;
-			child_state.init.push(b.stmt(b.call('$.hydrate_template', arg)));
 			arg = b.member(arg, 'content');
 		}
 
@@ -397,10 +389,6 @@ export function RegularElement(node, context) {
 			...context,
 			state: child_state
 		});
-
-		if (needs_reset) {
-			child_state.init.push(b.stmt(b.call('$.reset', context.state.node)));
-		}
 	}
 
 	if (node.fragment.nodes.some((node) => node.type === 'SnippetBlock')) {
@@ -606,15 +594,7 @@ function build_element_attribute_update_assignment(
 			has_call = false;
 		}
 		const callee = name.startsWith('xlink') ? '$.set_xlink_attribute' : '$.set_attribute';
-		update = b.stmt(
-			b.call(
-				callee,
-				node_id,
-				b.literal(name),
-				value,
-				is_ignored(element, 'hydration_attribute_changed') && b.true
-			)
-		);
+		update = b.stmt(b.call(callee, node_id, b.literal(name), value));
 	}
 
 	if (attribute.metadata.expression.has_state) {

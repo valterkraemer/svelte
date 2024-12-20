@@ -1,15 +1,7 @@
 /** @import { Effect, TemplateNode } from '#client' */
 import { EFFECT_TRANSPARENT } from '../../constants.js';
-import {
-	hydrate_next,
-	hydrate_node,
-	hydrating,
-	remove_nodes,
-	set_hydrate_node,
-	set_hydrating
-} from '../hydration.js';
 import { block, branch, pause_effect, resume_effect } from '../../reactivity/effects.js';
-import { HYDRATION_START_ELSE, UNINITIALIZED } from '../../../../constants.js';
+import { UNINITIALIZED } from '../../../../constants.js';
 
 /**
  * @param {TemplateNode} node
@@ -18,10 +10,6 @@ import { HYDRATION_START_ELSE, UNINITIALIZED } from '../../../../constants.js';
  * @returns {void}
  */
 export function if_block(node, fn, elseif = false) {
-	if (hydrating) {
-		hydrate_next();
-	}
-
 	var anchor = node;
 
 	/** @type {Effect | null} */
@@ -48,23 +36,6 @@ export function if_block(node, fn, elseif = false) {
 	) => {
 		if (condition === (condition = new_condition)) return;
 
-		/** Whether or not there was a hydration mismatch. Needs to be a `let` or else it isn't treeshaken out */
-		let mismatch = false;
-
-		if (hydrating) {
-			const is_else = /** @type {Comment} */ (anchor).data === HYDRATION_START_ELSE;
-
-			if (!!condition === is_else) {
-				// Hydration mismatch: remove everything inside the anchor and start fresh.
-				// This could happen with `{#if browser}...{/if}`, for example
-				anchor = remove_nodes();
-
-				set_hydrate_node(anchor);
-				set_hydrating(false);
-				mismatch = true;
-			}
-		}
-
 		if (condition) {
 			if (consequent_effect) {
 				resume_effect(consequent_effect);
@@ -90,11 +61,6 @@ export function if_block(node, fn, elseif = false) {
 				});
 			}
 		}
-
-		if (mismatch) {
-			// continue in hydration mode
-			set_hydrating(true);
-		}
 	};
 
 	block(() => {
@@ -104,8 +70,4 @@ export function if_block(node, fn, elseif = false) {
 			update_branch(null, null);
 		}
 	}, flags);
-
-	if (hydrating) {
-		anchor = hydrate_node;
-	}
 }

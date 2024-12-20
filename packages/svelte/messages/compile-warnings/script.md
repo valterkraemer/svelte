@@ -4,7 +4,7 @@
 
 ## legacy_component_creation
 
-> Svelte 5 components are no longer classes. Instantiate them using `mount` or `hydrate` (imported from 'svelte') instead.
+> Svelte 5 components are no longer classes. Instantiate them using `mount` instead.
 
 ## non_reactive_update
 

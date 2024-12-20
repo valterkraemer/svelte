@@ -10,14 +10,6 @@ export default test({
 		<p></p>
 	`,
 
-	ssrHtml: `
-		<button>click me</button>
-		<button>click me</button>
-
-		<p>{}</p>
-		<p></p>
-	`,
-
 	test({ assert, target, window }) {
 		const button = target.querySelectorAll('button')[1];
 

@@ -2,7 +2,7 @@ import { flushSync } from 'svelte';
 import { test } from '../../test';
 
 export default test({
-	mode: ['client', 'server'],
+	mode: ['client'],
 
 	async test({ assert, target }) {
 		let [btn1, btn2] = target.querySelectorAll('button');

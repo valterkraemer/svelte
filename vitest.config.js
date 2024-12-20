@@ -14,14 +14,7 @@ export default defineConfig({
 					const exported = pkg.exports[id === 'undefined' ? '.' : id.replace('undefined', './')];
 					if (!exported) return;
 
-					// When running the server version of the Svelte files,
-					// we also want to use the server export of the Svelte package
-					return path.resolve(
-						'packages/svelte',
-						importer?.includes('_output/server')
-							? exported.default
-							: exported.browser ?? exported.default
-					);
+					return path.resolve('packages/svelte', exported.browser ?? exported.default);
 				}
 			}
 		]
@@ -29,11 +22,7 @@ export default defineConfig({
 	test: {
 		dir: '.',
 		reporters: ['dot'],
-		include: [
-			'packages/svelte/**/*.test.ts',
-			'packages/svelte/tests/*/test.ts',
-			'packages/svelte/tests/runtime-browser/test-ssr.ts'
-		],
+		include: ['packages/svelte/**/*.test.ts', 'packages/svelte/tests/*/test.ts'],
 		exclude: [...configDefaults.exclude, '**/samples/**']
 	}
 });

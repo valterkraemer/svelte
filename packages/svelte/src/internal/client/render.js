@@ -1,33 +1,16 @@
 /** @import { ComponentContext, Effect, TemplateNode } from '#client' */
 /** @import { Component, ComponentType, SvelteComponent, MountOptions } from '../../index.js' */
 import { DEV } from 'esm-env';
-import {
-	clear_text_content,
-	create_text,
-	get_first_child,
-	get_next_sibling,
-	init_operations
-} from './dom/operations.js';
-import { HYDRATION_END, HYDRATION_ERROR, HYDRATION_START } from '../../constants.js';
+import { create_text, init_operations } from './dom/operations.js';
 import { push, pop, component_context, active_effect } from './runtime.js';
 import { component_root, branch } from './reactivity/effects.js';
-import {
-	hydrate_next,
-	hydrate_node,
-	hydrating,
-	set_hydrate_node,
-	set_hydrating
-} from './dom/hydration.js';
 import { array_from } from '../shared/utils.js';
 import {
 	all_registered_events,
 	handle_event_propagation,
 	root_event_handles
 } from './dom/elements/events.js';
-import { reset_head_anchor } from './dom/blocks/svelte-head.js';
 import * as w from './warnings.js';
-import * as e from './errors.js';
-import { assign_nodes } from './dom/template.js';
 import { is_passive_event } from '../../utils.js';
 
 /**
@@ -70,89 +53,6 @@ export function set_text(text, value) {
  */
 export function mount(component, options) {
 	return _mount(component, options);
-}
-
-/**
- * Hydrates a component on the given target and returns the exports and potentially the props (if compiled with `accessors: true`) of the component
- *
- * @template {Record<string, any>} Props
- * @template {Record<string, any>} Exports
- * @param {ComponentType<SvelteComponent<Props>> | Component<Props, Exports, any>} component
- * @param {{} extends Props ? {
- * 		target: Document | Element | ShadowRoot;
- * 		props?: Props;
- * 		events?: Record<string, (e: any) => any>;
- *  	context?: Map<any, any>;
- * 		intro?: boolean;
- * 		recover?: boolean;
- * 	} : {
- * 		target: Document | Element | ShadowRoot;
- * 		props: Props;
- * 		events?: Record<string, (e: any) => any>;
- *  	context?: Map<any, any>;
- * 		intro?: boolean;
- * 		recover?: boolean;
- * 	}} options
- * @returns {Exports}
- */
-export function hydrate(component, options) {
-	init_operations();
-	options.intro = options.intro ?? false;
-	const target = options.target;
-	const was_hydrating = hydrating;
-	const previous_hydrate_node = hydrate_node;
-
-	try {
-		var anchor = /** @type {TemplateNode} */ (get_first_child(target));
-		while (
-			anchor &&
-			(anchor.nodeType !== 8 || /** @type {Comment} */ (anchor).data !== HYDRATION_START)
-		) {
-			anchor = /** @type {TemplateNode} */ (get_next_sibling(anchor));
-		}
-
-		if (!anchor) {
-			throw HYDRATION_ERROR;
-		}
-
-		set_hydrating(true);
-		set_hydrate_node(/** @type {Comment} */ (anchor));
-		hydrate_next();
-
-		const instance = _mount(component, { ...options, anchor });
-
-		if (
-			hydrate_node === null ||
-			hydrate_node.nodeType !== 8 ||
-			/** @type {Comment} */ (hydrate_node).data !== HYDRATION_END
-		) {
-			w.hydration_mismatch();
-			throw HYDRATION_ERROR;
-		}
-
-		set_hydrating(false);
-
-		return /**  @type {Exports} */ (instance);
-	} catch (error) {
-		if (error === HYDRATION_ERROR) {
-			if (options.recover === false) {
-				e.hydration_failed();
-			}
-
-			// If an error occured above, the operations might not yet have been initialised.
-			init_operations();
-			clear_text_content(target);
-
-			set_hydrating(false);
-			return mount(component, options);
-		}
-
-		throw error;
-	} finally {
-		set_hydrating(was_hydrating);
-		set_hydrate_node(previous_hydrate_node);
-		reset_head_anchor();
-	}
 }
 
 /** @type {Map<string, number>} */
@@ -219,18 +119,10 @@ function _mount(Component, { target, anchor, props = {}, events, context, intro 
 				/** @type {any} */ (props).$$events = events;
 			}
 
-			if (hydrating) {
-				assign_nodes(/** @type {TemplateNode} */ (anchor_node), null);
-			}
-
 			should_intro = intro;
 			// @ts-expect-error the public typings are not what the actual function looks like
 			component = Component(anchor_node, props) || {};
 			should_intro = true;
-
-			if (hydrating) {
-				/** @type {Effect} */ (active_effect).nodes_end = hydrate_node;
-			}
 
 			if (context) {
 				pop();
@@ -264,13 +156,13 @@ function _mount(Component, { target, anchor, props = {}, events, context, intro 
 }
 
 /**
- * References of the components that were mounted or hydrated.
+ * References of the components that were mounted.
  * Uses a `WeakMap` to avoid memory leaks.
  */
 let mounted_components = new WeakMap();
 
 /**
- * Unmounts a component that was previously mounted using `mount` or `hydrate`.
+ * Unmounts a component that was previously mounted using `mount`.
  *
  * Since 5.13.0, if `options.outro` is `true`, [transitions](https://svelte.dev/docs/svelte/transition) will play before the component is removed from the DOM.
  *

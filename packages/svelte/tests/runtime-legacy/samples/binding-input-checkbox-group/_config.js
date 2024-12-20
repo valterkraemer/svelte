@@ -23,21 +23,6 @@ export default test({
 
 		<p>Beta</p>`,
 
-	ssrHtml: `
-		<label>
-			<input type="checkbox" value="[object Object]"> Alpha
-		</label>
-
-		<label>
-			<input type="checkbox" value="[object Object]" checked> Beta
-		</label>
-
-		<label>
-			<input type="checkbox" value="[object Object]"> Gamma
-		</label>
-
-		<p>Beta</p>`,
-
 	test({ assert, component, target, window }) {
 		let inputs = target.querySelectorAll('input');
 		assert.equal(inputs[0].checked, false);

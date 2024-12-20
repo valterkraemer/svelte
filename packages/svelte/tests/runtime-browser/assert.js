@@ -115,10 +115,9 @@ function normalize_children(node) {
  * @param {{
  *	skip?: boolean;
  *	solo?: boolean;
- *  mode?: Array<'server' | 'client' | 'hydrate'>;
- *  skip_mode?: Array<'server' | 'client' | 'hydrate'>;
+ *  mode?: Array<'client'>;
+ *  skip_mode?: Array<'client'>;
  *	html?: string;
- *	ssrHtml?: string;
  *	props?: Props;
  *	compileOptions?: Partial<CompileOptions>;
  *	test?: (args: {

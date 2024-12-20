@@ -21,9 +21,7 @@
   "exports": {
     ".": {
       "types": "./types/index.d.ts",
-      "worker": "./src/index-server.js",
-      "browser": "./src/index-client.js",
-      "default": "./src/index-server.js"
+      "browser": "./src/index-client.js"
     },
     "./package.json": "./package.json",
     "./action": {
@@ -60,14 +58,9 @@
     "./internal/flags/tracing": {
       "default": "./src/internal/flags/tracing.js"
     },
-    "./internal/server": {
-      "default": "./src/internal/server/index.js"
-    },
     "./legacy": {
       "types": "./types/index.d.ts",
-      "worker": "./src/legacy/legacy-server.js",
-      "browser": "./src/legacy/legacy-client.js",
-      "default": "./src/legacy/legacy-server.js"
+      "browser": "./src/legacy/legacy-client.js"
     },
     "./motion": {
       "types": "./types/index.d.ts",
@@ -75,23 +68,15 @@
     },
     "./reactivity": {
       "types": "./types/index.d.ts",
-      "worker": "./src/reactivity/index-server.js",
-      "browser": "./src/reactivity/index-client.js",
-      "default": "./src/reactivity/index-server.js"
+      "browser": "./src/reactivity/index-client.js"
     },
     "./reactivity/window": {
       "types": "./types/index.d.ts",
       "default": "./src/reactivity/window/index.js"
     },
-    "./server": {
-      "types": "./types/index.d.ts",
-      "default": "./src/server/index.js"
-    },
     "./store": {
       "types": "./types/index.d.ts",
-      "worker": "./src/store/index-server.js",
-      "browser": "./src/store/index-client.js",
-      "default": "./src/store/index-server.js"
+      "browser": "./src/store/index-client.js"
     },
     "./transition": {
       "types": "./types/index.d.ts",

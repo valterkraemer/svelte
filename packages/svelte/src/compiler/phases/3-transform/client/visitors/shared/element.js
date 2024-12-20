@@ -73,7 +73,7 @@ export function build_set_attributes(
 		context.state.analysis.css.hash !== '' && b.literal(context.state.analysis.css.hash),
 		preserve_attribute_case,
 		is_custom_element,
-		is_ignored(element, 'hydration_attribute_changed') && b.true
+		b.true
 	);
 
 	if (has_state) {

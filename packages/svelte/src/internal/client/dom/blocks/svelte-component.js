@@ -1,7 +1,6 @@
 /** @import { TemplateNode, Dom, Effect } from '#client' */
 import { EFFECT_TRANSPARENT } from '../../constants.js';
 import { block, branch, pause_effect } from '../../reactivity/effects.js';
-import { hydrate_next, hydrate_node, hydrating } from '../hydration.js';
 
 /**
  * @template P
@@ -12,10 +11,6 @@ import { hydrate_next, hydrate_node, hydrating } from '../hydration.js';
  * @returns {void}
  */
 export function component(node, get_component, render_fn) {
-	if (hydrating) {
-		hydrate_next();
-	}
-
 	var anchor = node;
 
 	/** @type {C} */
@@ -36,8 +31,4 @@ export function component(node, get_component, render_fn) {
 			effect = branch(() => render_fn(anchor, component));
 		}
 	}, EFFECT_TRANSPARENT);
-
-	if (hydrating) {
-		anchor = hydrate_node;
-	}
 }

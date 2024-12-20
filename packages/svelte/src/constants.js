@@ -18,12 +18,6 @@ export const TRANSITION_GLOBAL = 1 << 2;
 export const TEMPLATE_FRAGMENT = 1;
 export const TEMPLATE_USE_IMPORT_NODE = 1 << 1;
 
-export const HYDRATION_START = '[';
-/** used to indicate that an `{:else}...` block was rendered */
-export const HYDRATION_START_ELSE = '[!';
-export const HYDRATION_END = ']';
-export const HYDRATION_ERROR = {};
-
 export const ELEMENT_IS_NAMESPACED = 1;
 export const ELEMENT_PRESERVE_ATTRIBUTE_CASE = 1 << 1;
 
@@ -41,8 +35,6 @@ export const NAMESPACE_MATHML = 'http://www.w3.org/1998/Math/MathML';
 export const IGNORABLE_RUNTIME_WARNINGS = /** @type {const} */ ([
 	'state_snapshot_uncloneable',
 	'binding_property_non_reactive',
-	'hydration_attribute_changed',
-	'hydration_html_changed',
 	'ownership_invalid_binding',
 	'ownership_invalid_mutation'
 ]);

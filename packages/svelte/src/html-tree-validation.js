@@ -56,7 +56,7 @@ const autoclosing_children = {
 /**
  * Returns true if the tag is either the last in the list of siblings and will be autoclosed,
  * or not allowed inside the parent tag such that it will auto-close it. The latter results
- * in the browser repairing the HTML, which will likely result in an error during hydration.
+ * in the browser repairing the HTML.
  * @param {string} current
  * @param {string} [next]
  */
@@ -136,7 +136,7 @@ const disallowed_children = {
 
 /**
  * Returns an error message if the tag is not allowed inside the ancestor tag (which is grandparent and above) such that it will result
- * in the browser repairing the HTML, which will likely result in an error during hydration.
+ * in the browser repairing the HTML.
  * @param {string} child_tag
  * @param {string[]} ancestors All nodes starting with the parent, up until the ancestor, which means two entries minimum
  * @param {string} [child_loc]
@@ -176,7 +176,7 @@ export function is_tag_valid_with_ancestor(child_tag, ancestors, child_loc, ance
 
 /**
  * Returns an error message if the tag is not allowed inside the parent tag such that it will result
- * in the browser repairing the HTML, which will likely result in an error during hydration.
+ * in the browser repairing the HTML.
  * @param {string} child_tag
  * @param {string} parent_tag
  * @param {string} [child_loc]

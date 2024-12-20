@@ -2,17 +2,6 @@ import { flushSync } from 'svelte';
 import { ok, test } from '../../test';
 
 export default test({
-	ssrHtml: `
-		<h1>Hello !</h1>
-
-		<select>
-			<option value="Harry">Harry</option>
-			<optgroup label="Group">
-				<option value="World">World</option>
-			</optgroup>
-		</select>
-	`,
-
 	html: `
 		<h1>Hello Harry!</h1>
 

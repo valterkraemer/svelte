@@ -1,7 +1,7 @@
 import { test } from '../../test';
 
 export default test({
-	mode: ['client', 'hydrate'], // there's no class instance to retrieve in SSR mode
+	mode: ['client'], // there's no class instance to retrieve in SSR mode
 	get props() {
 		return { visible: true };
 	},

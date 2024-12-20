@@ -11,7 +11,6 @@ declare module 'svelte' {
 		anchor?: Element;
 		props?: Props;
 		context?: Map<any, any>;
-		hydrate?: boolean;
 		intro?: boolean;
 		recover?: boolean;
 		sync?: boolean;
@@ -420,26 +419,7 @@ declare module 'svelte' {
 	 * */
 	export function mount<Props extends Record<string, any>, Exports extends Record<string, any>>(component: ComponentType<SvelteComponent<Props>> | Component<Props, Exports, any>, options: MountOptions<Props>): Exports;
 	/**
-	 * Hydrates a component on the given target and returns the exports and potentially the props (if compiled with `accessors: true`) of the component
-	 *
-	 * */
-	export function hydrate<Props extends Record<string, any>, Exports extends Record<string, any>>(component: ComponentType<SvelteComponent<Props>> | Component<Props, Exports, any>, options: {} extends Props ? {
-		target: Document | Element | ShadowRoot;
-		props?: Props;
-		events?: Record<string, (e: any) => any>;
-		context?: Map<any, any>;
-		intro?: boolean;
-		recover?: boolean;
-	} : {
-		target: Document | Element | ShadowRoot;
-		props: Props;
-		events?: Record<string, (e: any) => any>;
-		context?: Map<any, any>;
-		intro?: boolean;
-		recover?: boolean;
-	}): Exports;
-	/**
-	 * Unmounts a component that was previously mounted using `mount` or `hydrate`.
+	 * Unmounts a component that was previously mounted using `mount`.
 	 *
 	 * Since 5.13.0, if `options.outro` is `true`, [transitions](https://svelte.dev/docs/svelte/transition) will play before the component is removed from the DOM.
 	 *
@@ -905,12 +885,11 @@ declare module 'svelte/compiler' {
 		dev?: boolean;
 		/**
 		 * If `"client"`, Svelte emits code designed to run in the browser.
-		 * If `"server"`, Svelte emits code suitable for server-side rendering.
 		 * If `false`, nothing is generated. Useful for tooling that is only interested in warnings.
 		 *
 		 * @default 'client'
 		 */
-		generate?: 'client' | 'server' | false;
+		generate?: 'client' | false;
 		/**
 		 * Used for debugging hints and sourcemaps. Your bundler plugin will set it automatically.
 		 */
@@ -2060,38 +2039,6 @@ declare module 'svelte/reactivity/window' {
 	export {};
 }
 
-declare module 'svelte/server' {
-	import type { ComponentProps, Component, SvelteComponent, ComponentType } from 'svelte';
-	/**
-	 * Only available on the server and when compiling with the `server` option.
-	 * Takes a component and returns an object with `body` and `head` properties on it, which you can use to populate the HTML when server-rendering your app.
-	 */
-	export function render<
-		Comp extends SvelteComponent<any> | Component<any>,
-		Props extends ComponentProps<Comp> = ComponentProps<Comp>
-	>(
-		...args: {} extends Props
-			? [
-					component: Comp extends SvelteComponent<any> ? ComponentType<Comp> : Comp,
-					options?: { props?: Omit<Props, '$$slots' | '$$events'>; context?: Map<any, any> }
-				]
-			: [
-					component: Comp extends SvelteComponent<any> ? ComponentType<Comp> : Comp,
-					options: { props: Omit<Props, '$$slots' | '$$events'>; context?: Map<any, any> }
-				]
-	): RenderOutput;
-	interface RenderOutput {
-		/** HTML that goes into the `<head>` */
-		head: string;
-		/** @deprecated use `body` instead */
-		html: string;
-		/** HTML that goes somewhere into the `<body>` */
-		body: string;
-	}
-
-	export {};
-}
-
 declare module 'svelte/store' {
 	/** Callback to inform of a value updates. */
 	export type Subscriber<T> = (value: T) => void;
@@ -2609,12 +2556,11 @@ declare module 'svelte/types/compiler/interfaces' {
 		dev?: boolean;
 		/**
 		 * If `"client"`, Svelte emits code designed to run in the browser.
-		 * If `"server"`, Svelte emits code suitable for server-side rendering.
 		 * If `false`, nothing is generated. Useful for tooling that is only interested in warnings.
 		 *
 		 * @default 'client'
 		 */
-		generate?: 'client' | 'server' | false;
+		generate?: 'client' | false;
 		/**
 		 * Used for debugging hints and sourcemaps. Your bundler plugin will set it automatically.
 		 */

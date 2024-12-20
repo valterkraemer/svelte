@@ -9,13 +9,6 @@ export default test({
 		<div contenteditable="true">world</div>
 	`,
 
-	ssrHtml: `
-		<input value="world">
-		<p>hello world</p>
-		<textarea>world</textarea>
-		<div contenteditable="true">world</div>
-	`,
-
 	test({ assert, component, target, window }) {
 		const input = target.querySelector('input');
 		ok(input);

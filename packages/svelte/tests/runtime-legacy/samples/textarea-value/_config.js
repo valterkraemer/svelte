@@ -6,7 +6,6 @@ export default test({
 	},
 
 	html: '<textarea></textarea>',
-	ssrHtml: '<textarea>42</textarea>',
 
 	test({ assert, component, target }) {
 		const textarea = /** @type {HTMLTextAreaElement} */ (target.querySelector('textarea'));

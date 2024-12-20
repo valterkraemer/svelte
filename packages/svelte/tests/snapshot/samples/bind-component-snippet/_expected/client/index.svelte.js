@@ -3,8 +3,6 @@ import * as $ from "svelte/internal/client";
 import TextInput from './Child.svelte';
 
 const snippet = ($$anchor) => {
-	$.next();
-
 	var text = $.text("Something");
 
 	$.append($$anchor, text);

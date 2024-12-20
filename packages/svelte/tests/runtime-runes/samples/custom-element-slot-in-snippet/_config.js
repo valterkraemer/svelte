@@ -1,7 +1,7 @@
 import { test } from '../../test';
 
 export default test({
-	mode: ['client', 'server'],
+	mode: ['client'],
 	html: `<my-custom-element>Default <span slot="slot">Slotted</span></my-custom-element>`,
 	test({ target, assert }) {
 		const shadowRoot = /** @type {ShadowRoot} */ (

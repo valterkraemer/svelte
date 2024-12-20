@@ -3,7 +3,6 @@ import { UNINITIALIZED } from '../../../../constants.js';
 import { block, branch, pause_effect } from '../../reactivity/effects.js';
 import { not_equal, safe_not_equal } from '../../reactivity/equality.js';
 import { is_runes } from '../../runtime.js';
-import { hydrate_next, hydrate_node, hydrating } from '../hydration.js';
 
 /**
  * @template V
@@ -13,10 +12,6 @@ import { hydrate_next, hydrate_node, hydrating } from '../hydration.js';
  * @returns {void}
  */
 export function key_block(node, get_key, render_fn) {
-	if (hydrating) {
-		hydrate_next();
-	}
-
 	var anchor = node;
 
 	/** @type {V | typeof UNINITIALIZED} */
@@ -36,8 +31,4 @@ export function key_block(node, get_key, render_fn) {
 			effect = branch(() => render_fn(anchor));
 		}
 	});
-
-	if (hydrating) {
-		anchor = hydrate_node;
-	}
 }

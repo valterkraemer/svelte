@@ -16,24 +16,6 @@ export default test({
 		</div>
 	`,
 
-	ssrHtml: `
-		<div data-id="1">
-			<inner>0</inner>
-			<inner>1</inner>
-			<inner>2</inner>
-		</div>
-		<div data-id="2">
-			<inner>0</inner>
-			<inner>1</inner>
-			<inner>2</inner>
-		</div>
-		<div data-id="3">
-			<inner>0</inner>
-			<inner>1</inner>
-			<inner>2</inner>
-		</div>
-	`,
-
 	async test({ assert, component, target }) {
 		await component.done;
 		// With Svelte 5, this is 9. With Svelte 4 it was 13.

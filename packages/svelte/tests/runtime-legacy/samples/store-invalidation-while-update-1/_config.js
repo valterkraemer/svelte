@@ -8,12 +8,6 @@ export default test({
 		<div>simple</div>
 		<button>click me</button>
 	`,
-	ssrHtml: `
-		<input value="">
-		<div></div>
-		<div>simple</div>
-		<button>click me</button>
-	`,
 
 	test({ assert, target, window }) {
 		const input = target.querySelector('input');

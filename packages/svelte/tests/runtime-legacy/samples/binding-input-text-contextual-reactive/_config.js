@@ -29,23 +29,6 @@ export default test({
 		<p>remaining:one / done:two / remaining:three</p>
 	`,
 
-	ssrHtml: `
-		<div>
-			<input type="checkbox">
-			<input type="text" value=one><p>one</p>
-		</div>
-		<div>
-			<input type="checkbox" checked="">
-			<input type="text" value=two><p>two</p>
-		</div>
-		<div>
-			<input type="checkbox">
-			<input type="text" value=three><p>three</p>
-		</div>
-
-		<p>remaining:one / done:two / remaining:three</p>
-	`,
-
 	test({ assert, component, target, window }) {
 		/**
 		 * @param {number} i

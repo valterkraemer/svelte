@@ -92,9 +92,7 @@ export const codes = [
 	"options_deprecated_immutable",
 	"options_missing_custom_element",
 	"options_removed_enable_sourcemap",
-	"options_removed_hydratable",
 	"options_removed_loop_guard_timeout",
-	"options_renamed_ssr_dom",
 	"export_let_unused",
 	"legacy_component_creation",
 	"non_reactive_update",
@@ -115,7 +113,6 @@ export const codes = [
 	"component_name_lowercase",
 	"element_invalid_self_closing_tag",
 	"event_directive_deprecated",
-	"node_invalid_placement_ssr",
 	"script_context_deprecated",
 	"script_unknown_attribute",
 	"slot_element_deprecated",
@@ -559,27 +556,11 @@ export function options_removed_enable_sourcemap(node) {
 }
 
 /**
- * The `hydratable` option has been removed. Svelte components are always hydratable now
- * @param {null | NodeLike} node
- */
-export function options_removed_hydratable(node) {
-	w(node, "options_removed_hydratable", `The \`hydratable\` option has been removed. Svelte components are always hydratable now\nhttps://svelte.dev/e/options_removed_hydratable`);
-}
-
-/**
  * The `loopGuardTimeout` option has been removed
  * @param {null | NodeLike} node
  */
 export function options_removed_loop_guard_timeout(node) {
 	w(node, "options_removed_loop_guard_timeout", `The \`loopGuardTimeout\` option has been removed\nhttps://svelte.dev/e/options_removed_loop_guard_timeout`);
-}
-
-/**
- * `generate: "dom"` and `generate: "ssr"` options have been renamed to "client" and "server" respectively
- * @param {null | NodeLike} node
- */
-export function options_renamed_ssr_dom(node) {
-	w(node, "options_renamed_ssr_dom", `\`generate: "dom"\` and \`generate: "ssr"\` options have been renamed to "client" and "server" respectively\nhttps://svelte.dev/e/options_renamed_ssr_dom`);
 }
 
 /**
@@ -592,11 +573,11 @@ export function export_let_unused(node, name) {
 }
 
 /**
- * Svelte 5 components are no longer classes. Instantiate them using `mount` or `hydrate` (imported from 'svelte') instead.
+ * Svelte 5 components are no longer classes. Instantiate them using `mount` instead.
  * @param {null | NodeLike} node
  */
 export function legacy_component_creation(node) {
-	w(node, "legacy_component_creation", `Svelte 5 components are no longer classes. Instantiate them using \`mount\` or \`hydrate\` (imported from 'svelte') instead.\nhttps://svelte.dev/e/legacy_component_creation`);
+	w(node, "legacy_component_creation", `Svelte 5 components are no longer classes. Instantiate them using \`mount\` instead.\nhttps://svelte.dev/e/legacy_component_creation`);
 }
 
 /**
@@ -751,15 +732,6 @@ export function element_invalid_self_closing_tag(node, name) {
  */
 export function event_directive_deprecated(node, name) {
 	w(node, "event_directive_deprecated", `Using \`on:${name}\` to listen to the ${name} event is deprecated. Use the event attribute \`on${name}\` instead\nhttps://svelte.dev/e/event_directive_deprecated`);
-}
-
-/**
- * %message%. When rendering this component on the server, the resulting HTML will be modified by the browser (by moving, removing, or inserting elements), likely resulting in a `hydration_mismatch` warning
- * @param {null | NodeLike} node
- * @param {string} message
- */
-export function node_invalid_placement_ssr(node, message) {
-	w(node, "node_invalid_placement_ssr", `${message}. When rendering this component on the server, the resulting HTML will be modified by the browser (by moving, removing, or inserting elements), likely resulting in a \`hydration_mismatch\` warning\nhttps://svelte.dev/e/node_invalid_placement_ssr`);
 }
 
 /**

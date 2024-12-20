@@ -14,7 +14,6 @@ export interface ComponentConstructorOptions<
 	anchor?: Element;
 	props?: Props;
 	context?: Map<any, any>;
-	hydrate?: boolean;
 	intro?: boolean;
 	recover?: boolean;
 	sync?: boolean;

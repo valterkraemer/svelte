@@ -9,9 +9,5 @@ export default test({
 	test({ assert, component }) {
 		component.visible = false;
 		assert.deepEqual(destroyed, ['C', 'B', 'A']);
-	},
-
-	test_ssr({ assert }) {
-		assert.deepEqual(destroyed, ['C', 'B', 'A']);
 	}
 });

@@ -58,9 +58,7 @@ export type CssHashGetter = (args: {
 	hash: (input: string) => string;
 }) => string;
 
-export interface OptimizeOptions {
-	hydrate?: boolean;
-}
+export interface OptimizeOptions {}
 
 export interface CompileOptions extends ModuleCompileOptions {
 	/**
@@ -192,12 +190,11 @@ export interface ModuleCompileOptions {
 	dev?: boolean;
 	/**
 	 * If `"client"`, Svelte emits code designed to run in the browser.
-	 * If `"server"`, Svelte emits code suitable for server-side rendering.
 	 * If `false`, nothing is generated. Useful for tooling that is only interested in warnings.
 	 *
 	 * @default 'client'
 	 */
-	generate?: 'client' | 'server' | false;
+	generate?: 'client' | false;
 	/**
 	 * Used for debugging hints and sourcemaps. Your bundler plugin will set it automatically.
 	 */

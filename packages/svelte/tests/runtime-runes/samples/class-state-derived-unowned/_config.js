@@ -3,7 +3,7 @@ import { test } from '../../test';
 
 export default test({
 	// The component context class instance gets shared between tests, strangely, causing hydration to fail?
-	mode: ['client', 'server'],
+	mode: ['client'],
 
 	async test({ assert, target, logs }) {
 		const btn = target.querySelector('button');

@@ -5,10 +5,6 @@ export default test({
 		<input />
 		<input />
 	`,
-	ssrHtml: `
-		<input value="" />
-		<input value="hello" />
-	`,
 
 	test({ assert, component, target, window }) {
 		const [input1, input2] = target.querySelectorAll('input');

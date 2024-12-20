@@ -10,12 +10,6 @@ export default test({
 		</div>
 	`,
 
-	ssrHtml: `
-		<div>
-			<h3>Called 0 times.</h3>
-			<p>baz false</p>
-		</div>`,
-
 	test({ assert, component, target }) {
 		const nested = component.nested;
 

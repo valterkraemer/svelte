@@ -1,7 +1,6 @@
 /** @import { Effect, TemplateNode } from '#client' */
-import { FILENAME, HYDRATION_ERROR } from '../../../../constants.js';
+import { FILENAME } from '../../../../constants.js';
 import { block, branch, destroy_effect } from '../../reactivity/effects.js';
-import { hydrate_next, hydrate_node, hydrating, set_hydrate_node } from '../hydration.js';
 import { create_fragment_from_html } from '../reconciler.js';
 import { assign_nodes } from '../template.js';
 import * as w from '../../warnings.js';
@@ -27,8 +26,6 @@ function check_hash(element, server_hash, value) {
 	} else if (dev_current_component_function?.[FILENAME]) {
 		location = `in ${dev_current_component_function[FILENAME]}`;
 	}
-
-	w.hydration_html_changed(sanitize_location(location));
 }
 
 /**
@@ -49,9 +46,6 @@ export function html(node, get_value, svg, mathml, skip_warning) {
 
 	block(() => {
 		if (value === (value = get_value() ?? '')) {
-			if (hydrating) {
-				hydrate_next();
-			}
 			return;
 		}
 
@@ -63,35 +57,6 @@ export function html(node, get_value, svg, mathml, skip_warning) {
 		if (value === '') return;
 
 		effect = branch(() => {
-			if (hydrating) {
-				// We're deliberately not trying to repair mismatches between server and client,
-				// as it's costly and error-prone (and it's an edge case to have a mismatch anyway)
-				var hash = /** @type {Comment} */ (hydrate_node).data;
-				var next = hydrate_next();
-				var last = next;
-
-				while (
-					next !== null &&
-					(next.nodeType !== 8 || /** @type {Comment} */ (next).data !== '')
-				) {
-					last = next;
-					next = /** @type {TemplateNode} */ (get_next_sibling(next));
-				}
-
-				if (next === null) {
-					w.hydration_mismatch();
-					throw HYDRATION_ERROR;
-				}
-
-				if (DEV && !skip_warning) {
-					check_hash(/** @type {Element} */ (next.parentNode), hash, value);
-				}
-
-				assign_nodes(hydrate_node, last);
-				anchor = set_hydrate_node(next);
-				return;
-			}
-
 			var html = value + '';
 			if (svg) html = `<svg>${html}</svg>`;
 			else if (mathml) html = `<math>${html}</math>`;

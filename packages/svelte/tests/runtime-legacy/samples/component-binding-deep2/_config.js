@@ -7,11 +7,6 @@ export default test({
 		<p>foo</p>
 	`,
 
-	ssrHtml: `
-		<input value=foo>
-		<p>foo</p>
-	`,
-
 	test({ assert, component, target, window }) {
 		const event = new window.MouseEvent('input');
 		const input = target.querySelector('input');

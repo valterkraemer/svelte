@@ -82,11 +82,6 @@ export function Fragment(node, context) {
 		context.visit(node, state);
 	}
 
-	if (is_text_first) {
-		// skip over inserted comment
-		body.push(b.stmt(b.call('$.next')));
-	}
-
 	/**
 	 * @param {Identifier} template_name
 	 * @param {Expression[]} args

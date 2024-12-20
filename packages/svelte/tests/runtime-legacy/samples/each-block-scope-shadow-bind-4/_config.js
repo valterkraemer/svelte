@@ -9,13 +9,7 @@ export default test({
 		</div>
 		<button>Button</button>
 	`,
-	ssrHtml: `
-		<div>
-			b: Hello
-			<input value="Hello" />
-		</div>
-		<button>Button</button>
-	`,
+
 	test({ assert, target, window }) {
 		const input = target.querySelector('input');
 		ok(input);

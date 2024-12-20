@@ -5,10 +5,6 @@ export default test({
 		<input>
 	`,
 
-	ssrHtml: `
-		<input>
-	`,
-
 	async test({ assert, component, target }) {
 		const input = target.querySelector('input');
 		ok(input);

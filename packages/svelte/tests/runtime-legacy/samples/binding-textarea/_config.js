@@ -11,11 +11,6 @@ export default test({
 		<p>some text</p>
 	`,
 
-	ssrHtml: `
-		<textarea>some text</textarea>
-		<p>some text</p>
-	`,
-
 	test({ assert, component, target, window }) {
 		const textarea = target.querySelector('textarea');
 		ok(textarea);

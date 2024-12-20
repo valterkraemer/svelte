@@ -11,12 +11,6 @@ export default test({
 		<p>indeterminate? true</p>
 	`,
 
-	ssrHtml: `
-		<input type="checkbox">
-		<p>checked? </p>
-		<p>indeterminate? true</p>
-	`,
-
 	async test({ assert, component, target, window }) {
 		const input = target.querySelector('input');
 		ok(input);

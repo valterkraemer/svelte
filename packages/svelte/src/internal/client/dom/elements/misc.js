@@ -1,4 +1,3 @@
-import { hydrating } from '../hydration.js';
 import { clear_text_content, get_first_child } from '../operations.js';
 import { queue_micro_task } from '../task.js';
 
@@ -26,11 +25,7 @@ export function autofocus(dom, value) {
  * @param {HTMLTextAreaElement} dom
  * @returns {void}
  */
-export function remove_textarea_child(dom) {
-	if (hydrating && get_first_child(dom) !== null) {
-		clear_text_content(dom);
-	}
-}
+export function remove_textarea_child(dom) {}
 
 let listening_to_form_reset = false;
 

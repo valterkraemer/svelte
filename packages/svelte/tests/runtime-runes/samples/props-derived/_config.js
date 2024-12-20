@@ -4,7 +4,7 @@ let math_random = Math.random;
 let calls = 0;
 
 export default test({
-	mode: ['client', 'server'],
+	mode: ['client'],
 
 	before_test() {
 		Math.random = function () {

@@ -21,7 +21,7 @@ export default test({
 		});
 	},
 
-	mode: ['client', 'hydrate'],
+	mode: ['client'],
 
 	test({ assert, target, window }) {
 		const event = new window.Event('resize');

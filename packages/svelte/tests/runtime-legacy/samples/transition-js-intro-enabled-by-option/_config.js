@@ -3,7 +3,7 @@ import { test } from '../../test';
 export default test({
 	intro: true,
 
-	mode: ['client', 'server'],
+	mode: ['client'],
 
 	test({ assert, target, raf }) {
 		const div = /** @type {HTMLDivElement & { foo: number }} */ (target.querySelector('div'));

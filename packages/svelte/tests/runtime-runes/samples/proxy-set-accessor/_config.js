@@ -3,7 +3,6 @@ import { test, ok } from '../../test';
 
 export default test({
 	html: `<input><p>svelte</p>`,
-	ssrHtml: `<input value="SVELTE"><p>svelte</p>`,
 
 	test({ assert, target }) {
 		const input = target.querySelector('input');

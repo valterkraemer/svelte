@@ -24,8 +24,5 @@ export default test({
 		});
 
 		assert.deepEqual(logs, [0, 1, 'cleanup 1', 'cleanup 2']);
-	},
-	test_ssr({ assert, logs }) {
-		assert.deepEqual(logs, []);
 	}
 });

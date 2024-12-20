@@ -1,11 +1,7 @@
-import { DEV } from 'esm-env';
-import { hydrating } from '../hydration.js';
 import { get_descriptors, get_prototype_of } from '../../../shared/utils.js';
 import { create_event, delegate } from './events.js';
-import { add_form_reset_listener, autofocus } from './misc.js';
-import * as w from '../../warnings.js';
+import { autofocus } from './misc.js';
 import { LOADING_ATTR_SYMBOL } from '../../constants.js';
-import { queue_idle_task } from '../task.js';
 import { is_capture_event, is_delegated, normalize_attribute } from '../../../../utils.js';
 import {
 	active_effect,
@@ -21,36 +17,7 @@ import {
  * @returns {void}
  */
 export function remove_input_defaults(input) {
-	if (!hydrating) return;
-
-	var already_removed = false;
-
-	// We try and remove the default attributes later, rather than sync during hydration.
-	// Doing it sync during hydration has a negative impact on performance, but deferring the
-	// work in an idle task alleviates this greatly. If a form reset event comes in before
-	// the idle callback, then we ensure the input defaults are cleared just before.
-	var remove_defaults = () => {
-		if (already_removed) return;
-		already_removed = true;
-
-		// Remove the attributes but preserve the values
-		if (input.hasAttribute('value')) {
-			var value = input.value;
-			set_attribute(input, 'value', null);
-			input.value = value;
-		}
-
-		if (input.hasAttribute('checked')) {
-			var checked = input.checked;
-			set_attribute(input, 'checked', null);
-			input.checked = checked;
-		}
-	};
-
-	// @ts-expect-error
-	input.__on_r = remove_defaults;
-	queue_idle_task(remove_defaults);
-	add_form_reset_listener();
+	return;
 }
 
 /**
@@ -148,26 +115,6 @@ export function set_default_value(element, value) {
 export function set_attribute(element, attribute, value, skip_warning) {
 	// @ts-expect-error
 	var attributes = (element.__attributes ??= {});
-
-	if (hydrating) {
-		attributes[attribute] = element.getAttribute(attribute);
-
-		if (
-			attribute === 'src' ||
-			attribute === 'srcset' ||
-			(attribute === 'href' && element.nodeName === 'LINK')
-		) {
-			if (!skip_warning) {
-				check_src_in_dev_hydration(element, attribute, value ?? '');
-			}
-
-			// If we reset these attributes, they would result in another network request, which we want to avoid.
-			// We assume they are the same between client and server as checking if they are equal is expensive
-			// (we can't just compare the strings as they can be different between client and server but result in the
-			// same url, so we would need to create hidden anchor elements to compare them)
-			return;
-		}
-	}
 
 	if (attributes[attribute] === (attributes[attribute] = value)) return;
 
@@ -394,11 +341,7 @@ export function set_attributes(
 				// @ts-ignore
 				element[name] = value;
 			} else if (typeof value !== 'function') {
-				if (hydrating && (name === 'src' || name === 'href' || name === 'srcset')) {
-					if (!skip_warning) check_src_in_dev_hydration(element, name, value ?? '');
-				} else {
-					set_attribute(element, name, value);
-				}
+				set_attribute(element, name, value);
 			}
 		}
 		if (key === 'style' && '__styles' in element) {
@@ -438,23 +381,6 @@ function get_setters(element) {
 	}
 
 	return setters;
-}
-
-/**
- * @param {any} element
- * @param {string} attribute
- * @param {string} value
- */
-function check_src_in_dev_hydration(element, attribute, value) {
-	if (!DEV) return;
-	if (attribute === 'srcset' && srcset_url_equal(element, value)) return;
-	if (src_url_equal(element.getAttribute(attribute) ?? '', value)) return;
-
-	w.hydration_attribute_changed(
-		attribute,
-		element.outerHTML.replace(element.innerHTML, element.innerHTML && '...'),
-		String(value)
-	);
 }
 
 /**
@@ -505,7 +431,7 @@ export function handle_lazy_img(element) {
 	// the loading and src after the img element has been appended to the document.
 	// Otherwise the lazy behaviour will not work due to our cloneNode heuristic for
 	// templates.
-	if (!hydrating && element.loading === 'lazy') {
+	if (element.loading === 'lazy') {
 		var src = element.src;
 		// @ts-expect-error
 		element[LOADING_ATTR_SYMBOL] = null;

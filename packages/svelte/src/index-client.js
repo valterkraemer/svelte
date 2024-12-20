@@ -179,7 +179,7 @@ export function flushSync(fn) {
 	flush_sync(fn);
 }
 
-export { hydrate, mount, unmount } from './internal/client/render.js';
+export { mount, unmount } from './internal/client/render.js';
 
 export {
 	getContext,

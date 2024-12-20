@@ -1,5 +1,4 @@
 /** @import { Effect, TemplateNode } from '#client' */
-import { hydrate_next, hydrate_node, hydrating, set_hydrate_node } from './hydration.js';
 import { create_text, get_first_child } from './operations.js';
 import { create_fragment_from_html } from './reconciler.js';
 import { active_effect } from '../runtime.js';
@@ -37,11 +36,6 @@ export function template(content, flags) {
 	var has_start = !content.startsWith('<!>');
 
 	return () => {
-		if (hydrating) {
-			assign_nodes(hydrate_node, null);
-			return hydrate_node;
-		}
-
 		if (node === undefined) {
 			node = create_fragment_from_html(has_start ? content : '<!>' + content);
 			if (!is_fragment) node = /** @type {Node} */ (get_first_child(node));
@@ -96,11 +90,6 @@ export function ns_template(content, flags, ns = 'svg') {
 	var node;
 
 	return () => {
-		if (hydrating) {
-			assign_nodes(hydrate_node, null);
-			return hydrate_node;
-		}
-
 		if (!node) {
 			var fragment = /** @type {DocumentFragment} */ (create_fragment_from_html(wrapped));
 			var root = /** @type {Element} */ (get_first_child(fragment));
@@ -158,9 +147,6 @@ export function mathml_template(content, flags) {
  * @returns {Node | Node[]}
  */
 function run_scripts(node) {
-	// scripts were SSR'd, in which case they will run
-	if (hydrating) return node;
-
 	const is_fragment = node.nodeType === 11;
 	const scripts =
 		/** @type {HTMLElement} */ (node).tagName === 'SCRIPT'
@@ -194,31 +180,12 @@ function run_scripts(node) {
  * @param {any} value
  */
 export function text(value = '') {
-	if (!hydrating) {
-		var t = create_text(value + '');
-		assign_nodes(t, t);
-		return t;
-	}
-
-	var node = hydrate_node;
-
-	if (node.nodeType !== 3) {
-		// if an {expression} is empty during SSR, we need to insert an empty text node
-		node.before((node = create_text()));
-		set_hydrate_node(node);
-	}
-
-	assign_nodes(node, node);
-	return node;
+	var t = create_text(value + '');
+	assign_nodes(t, t);
+	return t;
 }
 
 export function comment() {
-	// we're not delegating to `template` here for performance reasons
-	if (hydrating) {
-		assign_nodes(hydrate_node, null);
-		return hydrate_node;
-	}
-
 	var frag = document.createDocumentFragment();
 	var start = document.createComment('');
 	var anchor = create_text();
@@ -236,12 +203,6 @@ export function comment() {
  * @param {DocumentFragment | Element} dom
  */
 export function append(anchor, dom) {
-	if (hydrating) {
-		/** @type {Effect} */ (active_effect).nodes_end = hydrate_node;
-		hydrate_next();
-		return;
-	}
-
 	if (anchor === null) {
 		// edge case — void `<svelte:element>` with content
 		return;

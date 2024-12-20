@@ -3,8 +3,7 @@ import { setImmediate } from 'node:timers/promises';
 import glob from 'tiny-glob/sync.js';
 import { createClassComponent } from 'svelte/legacy';
 import { proxy } from 'svelte/internal/client';
-import { flushSync, hydrate, mount, unmount } from 'svelte';
-import { render } from 'svelte/server';
+import { flushSync, mount, unmount } from 'svelte';
 import { afterAll, assert, beforeAll } from 'vitest';
 import { compile_directory } from '../helpers.js';
 import { setup_html_equal } from '../html_equal.js';
@@ -28,18 +27,17 @@ type Assert = typeof import('vitest').assert & {
 export interface RuntimeTest<Props extends Record<string, any> = Record<string, any>>
 	extends BaseTest {
 	/** Use e.g. `mode: ['client']` to indicate that this test should never run in server/hydrate modes */
-	mode?: Array<'server' | 'client' | 'hydrate'>;
+	mode?: Array<'client'>;
 	/** Temporarily skip specific modes, without skipping the entire test */
-	skip_mode?: Array<'server' | 'client' | 'hydrate'>;
+	skip_mode?: Array<'client'>;
 	html?: string;
-	ssrHtml?: string;
 	compileOptions?: Partial<CompileOptions>;
 	props?: Props;
 	server_props?: Props;
 	before_test?: () => void;
 	after_test?: () => void;
 	test?: (args: {
-		variant: 'dom' | 'hydrate';
+		variant: 'dom';
 		assert: Assert;
 		compileOptions: CompileOptions;
 		component: Props & {
@@ -61,9 +59,7 @@ export interface RuntimeTest<Props extends Record<string, any> = Record<string, 
 		logs: any[];
 		warnings: any[];
 		errors: any[];
-		hydrate: Function;
 	}) => void | Promise<void>;
-	test_ssr?: (args: { logs: any[]; assert: Assert }) => void | Promise<void>;
 	accessors?: boolean;
 	immutable?: boolean;
 	intro?: boolean;
@@ -108,34 +104,14 @@ let console_warn = console.warn;
 let console_error = console.error;
 
 export function runtime_suite(runes: boolean) {
-	return suite_with_variants<RuntimeTest, 'hydrate' | 'ssr' | 'dom', CompileOptions>(
-		['dom', 'hydrate', 'ssr'],
+	return suite_with_variants<RuntimeTest, 'dom', CompileOptions>(
+		['dom'],
 		(variant, config) => {
-			if (variant === 'hydrate') {
-				if (config.mode && !config.mode.includes('hydrate')) return 'no-test';
-				if (config.skip_mode?.includes('hydrate')) return true;
-			}
-
 			if (
 				variant === 'dom' &&
 				(config.skip_mode?.includes('client') || (config.mode && !config.mode.includes('client')))
 			) {
 				return 'no-test';
-			}
-
-			if (variant === 'ssr') {
-				if (
-					(config.mode && !config.mode.includes('server')) ||
-					(!config.test_ssr &&
-						config.html === undefined &&
-						config.ssrHtml === undefined &&
-						config.error === undefined &&
-						config.runtime_error === undefined &&
-						!config.mode?.includes('server'))
-				) {
-					return 'no-test';
-				}
-				if (config.skip_mode?.includes('server')) return true;
 			}
 
 			return false;
@@ -167,7 +143,6 @@ async function common_setup(cwd: string, runes: boolean | undefined, config: Run
 	// so you can manipulate the output manually to see what fixes it, adding console.logs etc.
 	if (!config.load_compiled) {
 		await compile_directory(cwd, 'client', compileOptions);
-		await compile_directory(cwd, 'server', compileOptions);
 	}
 
 	return compileOptions;
@@ -176,7 +151,7 @@ async function common_setup(cwd: string, runes: boolean | undefined, config: Run
 async function run_test_variant(
 	cwd: string,
 	config: RuntimeTest,
-	variant: 'dom' | 'hydrate' | 'ssr',
+	variant: 'dom',
 	compileOptions: CompileOptions,
 	runes: boolean
 ) {
@@ -185,7 +160,6 @@ async function run_test_variant(
 	let logs: string[] = [];
 	let warnings: string[] = [];
 	let errors: string[] = [];
-	let manual_hydrate = false;
 
 	{
 		// use some crude static analysis to determine if logs/warnings are intercepted.
@@ -205,10 +179,6 @@ async function run_test_variant(
 			console.log = (...args) => {
 				logs.push(...args);
 			};
-		}
-
-		if (str.slice(0, i).includes('hydrate')) {
-			manual_hydrate = true;
 		}
 
 		if (str.slice(0, i).includes('warnings') || config.warnings) {
@@ -279,179 +249,108 @@ async function run_test_variant(
 
 		let snapshot = undefined;
 
-		if (variant === 'hydrate' || variant === 'ssr') {
-			config.before_test?.();
-			// ssr into target
-			const SsrSvelteComponent = (await import(`${cwd}/_output/server/main.svelte.js`)).default;
-			const { html, head } = render(SsrSvelteComponent, {
-				props: config.server_props ?? config.props ?? {}
+		target.innerHTML = '';
+
+		logs.length = warnings.length = 0;
+
+		config.before_test?.();
+
+		let instance: any;
+		let props: any;
+
+		if (runes) {
+			props = proxy({ ...(config.props || {}) });
+			const render = mount;
+			instance = render(mod.default, {
+				target,
+				props,
+				intro: config.intro
 			});
-
-			fs.writeFileSync(`${cwd}/_output/rendered.html`, html);
-			target.innerHTML = html;
-
-			if (head) {
-				fs.writeFileSync(`${cwd}/_output/rendered_head.html`, head);
-				window.document.head.innerHTML = window.document.head.innerHTML + head;
-			}
-
-			if (variant === 'hydrate') {
-				// @ts-expect-error TODO
-				if (config.snapshot) {
-					// @ts-expect-error
-					snapshot = config.snapshot(target);
-				}
-			}
 		} else {
-			target.innerHTML = '';
+			instance = createClassComponent({
+				component: mod.default,
+				props: config.props,
+				target,
+				intro: config.intro,
+				recover: config.recover ?? false
+			});
 		}
 
-		if (variant === 'ssr') {
-			if (config.ssrHtml) {
-				assert_html_equal_with_options(target.innerHTML, config.ssrHtml, {
-					preserveComments:
-						config.withoutNormalizeHtml === 'only-strip-comments' ? false : undefined,
-					withoutNormalizeHtml: !!config.withoutNormalizeHtml
-				});
-			} else if (config.html) {
-				assert_html_equal_with_options(target.innerHTML, config.html, {
-					preserveComments:
-						config.withoutNormalizeHtml === 'only-strip-comments' ? false : undefined,
-					withoutNormalizeHtml: !!config.withoutNormalizeHtml
-				});
-			}
+		if (config.error) {
+			unintended_error = true;
+			assert.fail('Expected a runtime error');
+		}
 
-			if (config.test_ssr) {
-				await config.test_ssr({
-					logs,
-					// @ts-expect-error
+		if (config.html) {
+			flushSync();
+			assert_html_equal_with_options(target.innerHTML, config.html, {
+				preserveComments: config.withoutNormalizeHtml === 'only-strip-comments' ? false : undefined,
+				withoutNormalizeHtml: !!config.withoutNormalizeHtml
+			});
+		}
+
+		try {
+			if (config.test) {
+				flushSync();
+				await config.test({
+					// @ts-expect-error TS doesn't get it
 					assert: {
 						...assert,
 						htmlEqual: assert_html_equal,
 						htmlEqualWithOptions: assert_html_equal_with_options
-					}
-				});
-			}
-		} else {
-			logs.length = warnings.length = 0;
-
-			config.before_test?.();
-
-			let instance: any;
-			let props: any;
-			let hydrate_fn: Function = () => {
-				throw new Error('Ensure dom mode is skipped');
-			};
-
-			if (runes) {
-				props = proxy({ ...(config.props || {}) });
-				if (manual_hydrate) {
-					hydrate_fn = () => {
-						instance = hydrate(mod.default, {
-							target,
-							props,
-							intro: config.intro,
-							recover: config.recover ?? false
-						});
-					};
-				} else {
-					const render = variant === 'hydrate' ? hydrate : mount;
-					instance = render(mod.default, {
-						target,
-						props,
-						intro: config.intro,
-						recover: config.recover ?? false
-					});
-				}
-			} else {
-				instance = createClassComponent({
-					component: mod.default,
-					props: config.props,
+					},
+					variant,
+					component: runes ? props : instance,
+					instance,
+					mod,
 					target,
-					intro: config.intro,
-					recover: config.recover ?? false,
-					hydrate: variant === 'hydrate'
+					snapshot,
+					window,
+					raf,
+					compileOptions,
+					logs,
+					warnings,
+					errors
 				});
 			}
 
-			if (config.error) {
+			if (config.runtime_error && !unhandled_rejection) {
 				unintended_error = true;
 				assert.fail('Expected a runtime error');
 			}
-
-			if (config.html) {
-				flushSync();
-				assert_html_equal_with_options(target.innerHTML, config.html, {
-					preserveComments:
-						config.withoutNormalizeHtml === 'only-strip-comments' ? false : undefined,
-					withoutNormalizeHtml: !!config.withoutNormalizeHtml
-				});
+		} finally {
+			if (runes) {
+				unmount(instance);
+			} else {
+				instance.$destroy();
 			}
 
-			try {
-				if (config.test) {
-					flushSync();
-					await config.test({
-						// @ts-expect-error TS doesn't get it
-						assert: {
-							...assert,
-							htmlEqual: assert_html_equal,
-							htmlEqualWithOptions: assert_html_equal_with_options
-						},
-						variant,
-						component: runes ? props : instance,
-						instance,
-						mod,
-						target,
-						snapshot,
-						window,
-						raf,
-						compileOptions,
-						logs,
-						warnings,
-						errors,
-						hydrate: hydrate_fn
-					});
-				}
+			if (config.warnings) {
+				assert.deepEqual(warnings, config.warnings);
+			} else if (warnings.length && console.warn === console_warn) {
+				unintended_error = true;
+				console_warn.apply(console, warnings);
+				assert.fail('Received unexpected warnings');
+			}
 
-				if (config.runtime_error && !unhandled_rejection) {
-					unintended_error = true;
-					assert.fail('Expected a runtime error');
-				}
-			} finally {
-				if (runes) {
-					unmount(instance);
-				} else {
-					instance.$destroy();
-				}
+			if (config.errors) {
+				assert.deepEqual(errors, config.errors);
+			} else if (errors.length && console.error === console_error) {
+				unintended_error = true;
+				console_error.apply(console, errors);
+				assert.fail('Received unexpected errors');
+			}
 
-				if (config.warnings) {
-					assert.deepEqual(warnings, config.warnings);
-				} else if (warnings.length && console.warn === console_warn) {
-					unintended_error = true;
-					console_warn.apply(console, warnings);
-					assert.fail('Received unexpected warnings');
-				}
+			assert_html_equal(
+				target.innerHTML,
+				'',
+				'Expected component to unmount and leave nothing behind after it was destroyed'
+			);
 
-				if (config.errors) {
-					assert.deepEqual(errors, config.errors);
-				} else if (errors.length && console.error === console_error) {
-					unintended_error = true;
-					console_error.apply(console, errors);
-					assert.fail('Received unexpected errors');
-				}
-
-				assert_html_equal(
-					target.innerHTML,
-					'',
-					'Expected component to unmount and leave nothing behind after it was destroyed'
-				);
-
-				// TODO: This seems useless, unhandledRejection is only triggered on the next task
-				// by which time the test has already finished and the next test resets it to null above
-				if (unhandled_rejection) {
-					throw unhandled_rejection; // eslint-disable-line no-unsafe-finally
-				}
+			// TODO: This seems useless, unhandledRejection is only triggered on the next task
+			// by which time the test has already finished and the next test resets it to null above
+			if (unhandled_rejection) {
+				throw unhandled_rejection; // eslint-disable-line no-unsafe-finally
 			}
 		}
 	} catch (err) {

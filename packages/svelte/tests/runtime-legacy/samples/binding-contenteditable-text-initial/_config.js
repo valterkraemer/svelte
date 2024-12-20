@@ -13,11 +13,6 @@ export default test({
 		<p>hello world</p>
 	`,
 
-	ssrHtml: `
-		<editor contenteditable="true"><b>world</b></editor>
-		<p>hello</p>
-	`,
-
 	async test({ assert, component, target, window }) {
 		assert.equal(component.name, 'world');
 

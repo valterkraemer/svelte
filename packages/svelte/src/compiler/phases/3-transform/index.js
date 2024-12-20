@@ -2,7 +2,6 @@
 /** @import { ComponentAnalysis, Analysis } from '../types' */
 import { print } from 'esrap';
 import { VERSION } from '../../../version.js';
-import { server_component, server_module } from './server/transform-server.js';
 import { client_component, client_module } from './client/transform-client.js';
 import { render_stylesheet } from './css/index.js';
 import { merge_with_preprocessor_map, get_source_name } from '../../utils/mapped_code.js';
@@ -27,10 +26,7 @@ export function transform_component(analysis, source, options) {
 		};
 	}
 
-	const program =
-		options.generate === 'server'
-			? server_component(analysis, options)
-			: client_component(analysis, options);
+	const program = client_component(analysis, options);
 
 	const js_source_name = get_source_name(options.filename, options.outputFilename, 'input.svelte');
 
@@ -78,10 +74,7 @@ export function transform_module(analysis, source, options) {
 		};
 	}
 
-	const program =
-		options.generate === 'server'
-			? server_module(analysis, options)
-			: client_module(analysis, options);
+	const program = client_module(analysis, options);
 
 	const basename = options.filename.split(/[/\\]/).at(-1);
 	if (program.body.length > 0) {

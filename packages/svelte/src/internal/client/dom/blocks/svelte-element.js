@@ -1,12 +1,5 @@
 /** @import { Effect, TemplateNode } from '#client' */
 import { FILENAME, NAMESPACE_SVG } from '../../../../constants.js';
-import {
-	hydrate_next,
-	hydrate_node,
-	hydrating,
-	set_hydrate_node,
-	set_hydrating
-} from '../hydration.js';
 import { create_text, get_first_child } from '../operations.js';
 import {
 	block,
@@ -33,12 +26,6 @@ import { is_raw_text_element } from '../../../../utils.js';
  * @returns {void}
  */
 export function element(node, get_tag, is_svg, render_fn, get_namespace, location) {
-	let was_hydrating = hydrating;
-
-	if (hydrating) {
-		hydrate_next();
-	}
-
 	var filename = DEV && location && component_context?.function[FILENAME];
 
 	/** @type {string | null} */
@@ -50,12 +37,7 @@ export function element(node, get_tag, is_svg, render_fn, get_namespace, locatio
 	/** @type {null | Element} */
 	var element = null;
 
-	if (hydrating && hydrate_node.nodeType === 1) {
-		element = /** @type {Element} */ (hydrate_node);
-		hydrate_next();
-	}
-
-	var anchor = /** @type {TemplateNode} */ (hydrating ? hydrate_node : node);
+	var anchor = /** @type {TemplateNode} */ (node);
 
 	/** @type {Effect | null} */
 	var effect;
@@ -97,11 +79,7 @@ export function element(node, get_tag, is_svg, render_fn, get_namespace, locatio
 
 		if (next_tag && next_tag !== current_tag) {
 			effect = branch(() => {
-				element = hydrating
-					? /** @type {Element} */ (element)
-					: ns
-						? document.createElementNS(ns, next_tag)
-						: document.createElement(next_tag);
+				element = ns ? document.createElementNS(ns, next_tag) : document.createElement(next_tag);
 
 				if (DEV && location) {
 					// @ts-expect-error
@@ -117,24 +95,9 @@ export function element(node, get_tag, is_svg, render_fn, get_namespace, locatio
 				assign_nodes(element, element);
 
 				if (render_fn) {
-					if (hydrating && is_raw_text_element(next_tag)) {
-						// prevent hydration glitches
-						element.append(document.createComment(''));
-					}
-
 					// If hydrating, use the existing ssr comment as the anchor so that the
 					// inner open and close methods can pick up the existing nodes correctly
-					var child_anchor = /** @type {TemplateNode} */ (
-						hydrating ? get_first_child(element) : element.appendChild(create_text())
-					);
-
-					if (hydrating) {
-						if (child_anchor === null) {
-							set_hydrating(false);
-						} else {
-							set_hydrate_node(child_anchor);
-						}
-					}
+					var child_anchor = /** @type {TemplateNode} */ (element.appendChild(create_text()));
 
 					// `child_anchor` is undefined if this is a void element, but we still
 					// need to call `render_fn` in order to run actions etc. If the element
@@ -156,9 +119,4 @@ export function element(node, get_tag, is_svg, render_fn, get_namespace, locatio
 
 		set_current_each_item(previous_each_item);
 	}, EFFECT_TRANSPARENT);
-
-	if (was_hydrating) {
-		set_hydrating(true);
-		set_hydrate_node(anchor);
-	}
 }

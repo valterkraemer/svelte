@@ -677,22 +677,8 @@ Component has unused export property '%name%'. If it is for external reference o
 ### legacy_component_creation
 
 ```
-Svelte 5 components are no longer classes. Instantiate them using `mount` or `hydrate` (imported from 'svelte') instead.
+Svelte 5 components are no longer classes. Instantiate them using `mount` instead.
 ```
-
-### node_invalid_placement_ssr
-
-```
-%message%. When rendering this component on the server, the resulting HTML will be modified by the browser (by moving, removing, or inserting elements), likely resulting in a `hydration_mismatch` warning
-```
-
-HTML restricts where certain elements can appear. In case of a violation the browser will 'repair' the HTML in a way that breaks Svelte's assumptions about the structure of your components. Some examples:
-
-- `<p>hello <div>world</div></p>` will result in `<p>hello </p><div>world</div><p></p>` (the `<div>` autoclosed the `<p>` because `<p>` cannot contain block-level elements)
-- `<option><div>option a</div></option>` will result in `<option>option a</option>` (the `<div>` is removed)
-- `<table><tr><td>cell</td></tr></table>` will result in `<table><tbody><tr><td>cell</td></tr></tbody></table>` (a `<tbody>` is auto-inserted)
-
-This code will work when the component is rendered on the client (which is why this is a warning rather than an error), but if you use server rendering it will cause hydration to fail.
 
 ### non_reactive_update
 
@@ -748,22 +734,10 @@ The `customElement` option is used when generating a custom element. Did you for
 The `enableSourcemap` option has been removed. Source maps are always generated now, and tooling can choose to ignore them
 ```
 
-### options_removed_hydratable
-
-```
-The `hydratable` option has been removed. Svelte components are always hydratable now
-```
-
 ### options_removed_loop_guard_timeout
 
 ```
 The `loopGuardTimeout` option has been removed
-```
-
-### options_renamed_ssr_dom
-
-```
-`generate: "dom"` and `generate: "ssr"` options have been renamed to "client" and "server" respectively
 ```
 
 ### perf_avoid_inline_class

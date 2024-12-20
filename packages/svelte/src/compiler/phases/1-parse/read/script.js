@@ -10,7 +10,7 @@ import { is_text_attribute } from '../../../utils/ast.js';
 const regex_closing_script_tag = /<\/script\s*>/;
 const regex_starts_with_closing_script_tag = /^<\/script\s*>/;
 
-const RESERVED_ATTRIBUTES = ['server', 'client', 'worker', 'test', 'default'];
+const RESERVED_ATTRIBUTES = ['client', 'worker', 'test', 'default'];
 const ALLOWED_ATTRIBUTES = ['context', 'generics', 'lang', 'module'];
 
 /**

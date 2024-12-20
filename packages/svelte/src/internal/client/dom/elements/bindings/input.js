@@ -4,7 +4,6 @@ import { listen_to_event_and_reset_event } from './shared.js';
 import * as e from '../../../errors.js';
 import { is } from '../../../proxy.js';
 import { queue_micro_task } from '../../task.js';
-import { hydrating } from '../../hydration.js';
 import { is_runes, untrack } from '../../../runtime.js';
 
 /**
@@ -45,12 +44,10 @@ export function bind_value(input, get, set = get) {
 	});
 
 	if (
-		// If we are hydrating and the value has since changed,
-		// then use the updated value from the input instead.
-		(hydrating && input.defaultValue !== input.value) ||
 		// If defaultValue is set, then value == defaultValue
 		// TODO Svelte 6: remove input.value check and set to empty string?
-		(untrack(get) == null && input.value)
+		untrack(get) == null &&
+		input.value
 	) {
 		set(is_numberlike_input(input) ? to_number(input.value) : input.value);
 	}
@@ -98,9 +95,6 @@ export function bind_group(inputs, group_index, input, get, set = get) {
 	var is_checkbox = input.getAttribute('type') === 'checkbox';
 	var binding_group = inputs;
 
-	// needs to be let or related code isn't treeshaken out if it's always false
-	let hydration_mismatch = false;
-
 	if (group_index !== null) {
 		for (var index of group_index) {
 			// @ts-expect-error
@@ -130,13 +124,6 @@ export function bind_group(inputs, group_index, input, get, set = get) {
 	render_effect(() => {
 		var value = get();
 
-		// If we are hydrating and the value has since changed, then use the update value
-		// from the input instead.
-		if (hydrating && input.defaultChecked !== input.checked) {
-			hydration_mismatch = true;
-			return;
-		}
-
 		if (is_checkbox) {
 			value = value || [];
 			// @ts-ignore
@@ -164,22 +151,6 @@ export function bind_group(inputs, group_index, input, get, set = get) {
 			pending.delete(binding_group);
 		});
 	}
-
-	queue_micro_task(() => {
-		if (hydration_mismatch) {
-			var value;
-
-			if (is_checkbox) {
-				value = get_binding_group_value(binding_group, value, input.checked);
-			} else {
-				var hydration_input = binding_group.find((input) => input.checked);
-				// @ts-ignore
-				value = hydration_input?.__value;
-			}
-
-			set(value);
-		}
-	});
 }
 
 /**
@@ -195,9 +166,6 @@ export function bind_checked(input, get, set = get) {
 	});
 
 	if (
-		// If we are hydrating and the value has since changed,
-		// then use the update value from the input instead.
-		(hydrating && input.defaultChecked !== input.checked) ||
 		// If defaultChecked is set, then checked == defaultChecked
 		untrack(get) == null
 	) {

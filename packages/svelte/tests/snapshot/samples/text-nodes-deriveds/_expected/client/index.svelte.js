@@ -21,6 +21,5 @@ export default function Text_nodes_deriveds($$anchor) {
 	var text = $.child(p);
 
 	$.template_effect(() => $.set_text(text, `${$.get(stringified_text)}${$.get(stringified_text_1)}`));
-	$.reset(p);
 	$.append($$anchor, p);
 }

@@ -11,8 +11,5 @@ export default test({
 		flushSync();
 
 		assert.deepEqual(logs, ['effect1', 'effect2']);
-	},
-	test_ssr({ assert, logs }) {
-		assert.deepEqual(logs, []);
 	}
 });

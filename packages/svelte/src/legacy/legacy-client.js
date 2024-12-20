@@ -2,7 +2,7 @@
 import { DIRTY, LEGACY_PROPS, MAYBE_DIRTY } from '../internal/client/constants.js';
 import { user_pre_effect } from '../internal/client/reactivity/effects.js';
 import { mutable_source, set } from '../internal/client/reactivity/sources.js';
-import { hydrate, mount, unmount } from '../internal/client/render.js';
+import { mount, unmount } from '../internal/client/render.js';
 import {
 	active_effect,
 	component_context,
@@ -116,13 +116,12 @@ class Svelte4Component {
 			}
 		);
 
-		this.#instance = (options.hydrate ? hydrate : mount)(options.component, {
+		this.#instance = mount(options.component, {
 			target: options.target,
 			anchor: options.anchor,
 			props,
 			context: options.context,
-			intro: options.intro ?? false,
-			recover: options.recover
+			intro: options.intro ?? false
 		});
 
 		// We don't flush_sync for custom element wrappers or if the user doesn't want it

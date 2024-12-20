@@ -55,10 +55,6 @@ const { test, run } = suite<SourcemapTest>(async (config, cwd) => {
 		preprocess: config.preprocess,
 		options: config.options
 	});
-	await compile_directory(cwd, 'server', config.compileOptions, true, {
-		preprocess: config.preprocess,
-		options: config.options
-	});
 
 	const input = fs.readFileSync(`${cwd}/input.svelte`, 'utf-8');
 
@@ -205,23 +201,6 @@ const { test, run } = suite<SourcemapTest>(async (config, cwd) => {
 		if (config.client) {
 			compare('client', code_client, map_client, config.client);
 		}
-	}
-
-	if (config.client || config.server) {
-		const output_server = fs.readFileSync(`${cwd}/_output/server/input.svelte.js`, 'utf-8');
-		const map_server = JSON.parse(
-			fs.readFileSync(`${cwd}/_output/server/input.svelte.js.map`, 'utf-8')
-		);
-
-		compare(
-			'server',
-			output_server,
-			map_server,
-			config.server ??
-				// Reuse client sourcemap test for server
-				config.client ??
-				[]
-		);
 	}
 
 	let map_css = null;

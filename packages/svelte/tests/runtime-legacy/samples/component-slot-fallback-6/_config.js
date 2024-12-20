@@ -7,10 +7,6 @@ export default test({
 		<input>
 		{"value":""}
 	`,
-	ssrHtml: `
-		<input value="">
-		{"value":""}
-	`,
 
 	test({ assert, target, window }) {
 		const input = target.querySelector('input');

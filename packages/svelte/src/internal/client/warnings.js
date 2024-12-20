@@ -57,44 +57,6 @@ export function event_handler_invalid(handler, suggestion) {
 }
 
 /**
- * The `%attribute%` attribute on `%html%` changed its value between server and client renders. The client value, `%value%`, will be ignored in favour of the server value
- * @param {string} attribute
- * @param {string} html
- * @param {string} value
- */
-export function hydration_attribute_changed(attribute, html, value) {
-	if (DEV) {
-		console.warn(`%c[svelte] hydration_attribute_changed\n%cThe \`${attribute}\` attribute on \`${html}\` changed its value between server and client renders. The client value, \`${value}\`, will be ignored in favour of the server value\nhttps://svelte.dev/e/hydration_attribute_changed`, bold, normal);
-	} else {
-		console.warn(`https://svelte.dev/e/hydration_attribute_changed`);
-	}
-}
-
-/**
- * The value of an `{@html ...}` block %location% changed between server and client renders. The client value will be ignored in favour of the server value
- * @param {string | undefined | null} [location]
- */
-export function hydration_html_changed(location) {
-	if (DEV) {
-		console.warn(`%c[svelte] hydration_html_changed\n%c${location ? `The value of an \`{@html ...}\` block ${location} changed between server and client renders. The client value will be ignored in favour of the server value` : "The value of an `{@html ...}` block changed between server and client renders. The client value will be ignored in favour of the server value"}\nhttps://svelte.dev/e/hydration_html_changed`, bold, normal);
-	} else {
-		console.warn(`https://svelte.dev/e/hydration_html_changed`);
-	}
-}
-
-/**
- * Hydration failed because the initial UI does not match what was rendered on the server. The error occurred near %location%
- * @param {string | undefined | null} [location]
- */
-export function hydration_mismatch(location) {
-	if (DEV) {
-		console.warn(`%c[svelte] hydration_mismatch\n%c${location ? `Hydration failed because the initial UI does not match what was rendered on the server. The error occurred near ${location}` : "Hydration failed because the initial UI does not match what was rendered on the server"}\nhttps://svelte.dev/e/hydration_mismatch`, bold, normal);
-	} else {
-		console.warn(`https://svelte.dev/e/hydration_mismatch`);
-	}
-}
-
-/**
  * The `render` function passed to `createRawSnippet` should return HTML for a single element
  */
 export function invalid_raw_snippet_render() {

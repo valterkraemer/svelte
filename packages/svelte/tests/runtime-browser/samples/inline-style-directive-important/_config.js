@@ -6,11 +6,6 @@ export default test({
 		<h1 class="svelte-szzkfu" style="background-color: red !important;">hello</h1>
 	`,
 
-	ssrHtml: `
-		<h1 class="svelte-szzkfu" style="background-color: red;">hello</h1>
-		<h1 class="svelte-szzkfu" style="background-color: red !important;">hello</h1>
-	`,
-
 	test({ assert, target, window, component }) {
 		const h1s = target.querySelectorAll('h1');
 

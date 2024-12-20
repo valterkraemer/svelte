@@ -7,7 +7,6 @@ import {
 	dev_current_component_function,
 	set_dev_current_component_function
 } from '../../runtime.js';
-import { hydrate_next, hydrate_node, hydrating } from '../hydration.js';
 import { create_fragment_from_html } from '../reconciler.js';
 import { assign_nodes } from '../template.js';
 import * as w from '../../warnings.js';
@@ -47,10 +46,6 @@ export function snippet(node, get_snippet, ...args) {
 
 		snippet_effect = branch(() => /** @type {SnippetFn} */ (snippet)(anchor, ...args));
 	}, EFFECT_TRANSPARENT);
-
-	if (hydrating) {
-		anchor = hydrate_node;
-	}
 }
 
 /**
@@ -89,20 +84,15 @@ export function createRawSnippet(fn) {
 		/** @type {Element} */
 		var element;
 
-		if (hydrating) {
-			element = /** @type {Element} */ (hydrate_node);
-			hydrate_next();
-		} else {
-			var html = snippet.render().trim();
-			var fragment = create_fragment_from_html(html);
-			element = /** @type {Element} */ (get_first_child(fragment));
+		var html = snippet.render().trim();
+		var fragment = create_fragment_from_html(html);
+		element = /** @type {Element} */ (get_first_child(fragment));
 
-			if (DEV && (get_next_sibling(element) !== null || element.nodeType !== 1)) {
-				w.invalid_raw_snippet_render();
-			}
-
-			anchor.before(element);
+		if (DEV && (get_next_sibling(element) !== null || element.nodeType !== 1)) {
+			w.invalid_raw_snippet_render();
 		}
+
+		anchor.before(element);
 
 		const result = snippet.setup?.(element);
 		assign_nodes(element, element);

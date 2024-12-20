@@ -2,7 +2,7 @@ import { flushSync } from 'svelte';
 import { ok, test } from '../../test';
 
 export default test({
-	mode: ['client', 'hydrate'],
+	mode: ['client'],
 	html: `
 		<input type="checkbox">
 		<input type="checkbox">

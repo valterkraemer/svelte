@@ -18,18 +18,6 @@ export default test({
 		</div>
 	`,
 
-	ssrHtml: `
-		<div>
-			<input value=one><p>one</p>
-		</div>
-		<div>
-			<input value=two><p>two</p>
-		</div>
-		<div>
-			<input value=three><p>three</p>
-		</div>
-	`,
-
 	test({ assert, component, target, window }) {
 		const inputs = [...target.querySelectorAll('input')];
 		const items = component.items;

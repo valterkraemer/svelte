@@ -3,7 +3,7 @@ import { test } from '../../test';
 
 export default test({
 	html: `<input type="number"><div>0</div>`,
-	mode: ['client', 'hydrate'],
+	mode: ['client'],
 
 	async test({ assert, target }) {
 		const [input1] = target.querySelectorAll('input');

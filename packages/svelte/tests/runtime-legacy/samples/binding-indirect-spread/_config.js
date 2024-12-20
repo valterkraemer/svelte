@@ -1,15 +1,6 @@
 import { test } from '../../test';
 
 export default test({
-	ssrHtml: `
-		<input type="radio" value="radio1">
-		<input type="radio" value="radio2" checked>
-		<input type="radio" value="radio3">
-
-		<input type="checkbox" value="check1">
-		<input type="checkbox" value="check2" checked>
-		<input type="checkbox" value="check3">
-	`,
 	async test({ assert, component, target, window }) {
 		const event = new window.MouseEvent('click');
 

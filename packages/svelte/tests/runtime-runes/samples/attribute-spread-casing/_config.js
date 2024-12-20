@@ -14,16 +14,5 @@ export default test({
 
 		<svg readonly="false"></svg>
 		<svg readonly="false"></svg>
-	`,
-	ssrHtml: `
-		<button>click me</button>
-		<input>
-		<input>
-
-		<custom-element></custom-element>
-		<custom-element readonly="false"></custom-element>
-
-		<svg readonly="false"></svg>
-		<svg readonly="false"></svg>
-`
+	`
 });

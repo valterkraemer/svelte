@@ -45,7 +45,6 @@ function strip_link(message: string) {
 
 const { test, run } = suite<CssTest>(async (config, cwd) => {
 	await compile_directory(cwd, 'client', { cssHash: () => 'svelte-xyz', ...config.compileOptions });
-	await compile_directory(cwd, 'server', { cssHash: () => 'svelte-xyz', ...config.compileOptions });
 
 	const expected = {
 		html: try_read_file(`${cwd}/expected.html`),
@@ -55,7 +54,6 @@ const { test, run } = suite<CssTest>(async (config, cwd) => {
 	// we do this here, rather than in the expected.html !== null
 	// block, to verify that valid code was generated
 	const ClientComponent = (await import(`${cwd}/_output/client/input.svelte.js`)).default;
-	const ServerComponent = (await import(`${cwd}/_output/server/input.svelte.js`)).default;
 
 	// verify that the right elements have scoping selectors (do this first to ensure all actual files are written to disk)
 	if (expected.html !== null) {
@@ -79,14 +77,9 @@ const { test, run } = suite<CssTest>(async (config, cwd) => {
 	}
 
 	const dom_css = fs.readFileSync(`${cwd}/_output/client/input.svelte.css`, 'utf-8').trim();
-	const ssr_css = fs.readFileSync(`${cwd}/_output/server/input.svelte.css`, 'utf-8').trim();
-
-	assert.equal(dom_css, ssr_css);
 
 	const dom_warnings = load_warnings(`${cwd}/_output/client/input.svelte.warnings.json`);
-	const ssr_warnings = load_warnings(`${cwd}/_output/server/input.svelte.warnings.json`);
 	const expected_warnings = (config.warnings || []).map(normalize_warning);
-	assert.deepEqual(dom_warnings, ssr_warnings);
 	assert.deepEqual(dom_warnings.map(normalize_warning), expected_warnings);
 
 	assert.equal(dom_css.trim().replace(/\r\n/g, '\n'), (expected.css ?? '').trim());

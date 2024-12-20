@@ -7,12 +7,6 @@ export default test({
 			<div class="foo"></div>
 		</div>
 	`,
-	ssrHtml: `
-		<div>
-			<input value="" />
-			<div class="foo"></div>
-		</div>
-	`,
 
 	async test({ assert, component, target }) {
 		component.value = 'foo';

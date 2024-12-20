@@ -120,7 +120,6 @@ Custom elements can be a useful way to package components for consumption in a n
 
 - Styles are _encapsulated_, rather than merely _scoped_ (unless you set `shadow: "none"`). This means that any non-component styles (such as you might have in a `global.css` file) will not apply to the custom element, including styles with the `:global(...)` modifier
 - Instead of being extracted out as a separate .css file, styles are inlined into the component as a JavaScript string
-- Custom elements are not generally suitable for server-side rendering, as the shadow DOM is invisible until JavaScript loads
 - In Svelte, slotted content renders _lazily_. In the DOM, it renders _eagerly_. In other words, it will always be created even if the component's `<slot>` element is inside an `{#if ...}` block. Similarly, including a `<slot>` in an `{#each ...}` block will not cause the slotted content to be rendered multiple times
 - The deprecated `let:` directive has no effect, because custom elements do not have a way to pass data to the parent component that fills the slot
 - Polyfills are required to support older browsers

@@ -12,14 +12,6 @@ import {
 	set_component_context,
 	reset_is_throwing_error
 } from '../../runtime.js';
-import {
-	hydrate_next,
-	hydrate_node,
-	hydrating,
-	next,
-	remove_nodes,
-	set_hydrate_node
-} from '../hydration.js';
 import { queue_micro_task } from '../task.js';
 
 /**
@@ -61,7 +53,6 @@ export function boundary(node, props, boundary_fn) {
 
 	block(() => {
 		var boundary = /** @type {Effect} */ (active_effect);
-		var hydrate_open = hydrate_node;
 		var is_creating_fallback = false;
 
 		// We re-use the effect's fn property to avoid allocation of an additional field
@@ -89,10 +80,6 @@ export function boundary(node, props, boundary_fn) {
 
 			if (boundary_effect) {
 				destroy_effect(boundary_effect);
-			} else if (hydrating) {
-				set_hydrate_node(hydrate_open);
-				next();
-				set_hydrate_node(remove_nodes());
 			}
 
 			if (failed) {
@@ -120,15 +107,7 @@ export function boundary(node, props, boundary_fn) {
 			}
 		};
 
-		if (hydrating) {
-			hydrate_next();
-		}
-
 		boundary_effect = branch(() => boundary_fn(anchor));
 		reset_is_throwing_error();
 	}, EFFECT_TRANSPARENT | BOUNDARY_EFFECT);
-
-	if (hydrating) {
-		anchor = hydrate_node;
-	}
 }

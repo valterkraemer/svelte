@@ -37,22 +37,6 @@ Await blocks allow you to branch on the three possible states of a [`Promise`](h
 {/await}
 ```
 
-> [!NOTE] During server-side rendering, only the pending branch will be rendered.
->
-> If the provided expression is not a `Promise`, only the `:then` branch will be rendered, including during server-side rendering.
-
-The `catch` block can be omitted if you don't need to render anything when the promise rejects (or no error is possible).
-
-```svelte
-{#await promise}
-	<!-- promise is pending -->
-	<p>waiting for the promise to resolve...</p>
-{:then value}
-	<!-- promise was fulfilled -->
-	<p>The value is {value}</p>
-{/await}
-```
-
 If you don't care about the pending state, you can also omit the initial block.
 
 ```svelte

@@ -7,11 +7,6 @@ export default test({
 		<input />
 		<div></div>
 	`,
-	ssrHtml: `
-		<input value=""/>
-		<input value=""/>
-		<div></div>
-	`,
 
 	test({ assert, component, target, window }) {
 		let count = 0;

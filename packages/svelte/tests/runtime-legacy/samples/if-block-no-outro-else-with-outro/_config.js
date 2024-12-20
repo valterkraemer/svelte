@@ -10,12 +10,6 @@ export default test({
 		<input type=text>
 	`,
 
-	ssrHtml: `
-		<div>A wild component appears</div>
-		<p>x</p>
-		<input type=text value=x>
-	`,
-
 	test({ assert, component, target }) {
 		component.x = 'y';
 		assert.htmlEqual(

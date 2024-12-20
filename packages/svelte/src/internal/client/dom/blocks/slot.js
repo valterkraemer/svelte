@@ -1,5 +1,3 @@
-import { hydrate_next, hydrating } from '../hydration.js';
-
 /**
  * @param {Comment} anchor
  * @param {Record<string, any>} $$props
@@ -8,10 +6,6 @@ import { hydrate_next, hydrating } from '../hydration.js';
  * @param {null | ((anchor: Comment) => void)} fallback_fn
  */
 export function slot(anchor, $$props, name, slot_props, fallback_fn) {
-	if (hydrating) {
-		hydrate_next();
-	}
-
 	var slot_fn = $$props.$$slots?.[name];
 	// Interop: Can use snippets to fill slots
 	var is_interop = false;

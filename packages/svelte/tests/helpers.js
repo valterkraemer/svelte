@@ -54,7 +54,7 @@ export function create_deferred() {
 /**
  *
  * @param {string} cwd
- * @param {'client' | 'server'} generate
+ * @param {'client'} generate
  * @param {Partial<CompileOptions>} compileOptions
  * @param {boolean} [output_map]
  * @param {any} [preprocessor]
@@ -108,7 +108,6 @@ export async function compile_directory(
 			// cases where `{browser ? 'foo' : 'bar'}` is turning into `{'foo'}` on the server
 			// and `{bar}` on the client, assuming we have sophisticated enough treeshaking
 			// in the future to make this a thing.
-			(!file.endsWith('.server.svelte') || generate === 'server') &&
 			(!file.endsWith('.client.svelte') || generate === 'client')
 		) {
 			file = file.replace(/\.client\.svelte$/, '.svelte').replace(/\.server\.svelte$/, '.svelte');

@@ -38,7 +38,7 @@ An action can be called with an argument:
 <div use:myaction={+++data+++}>...</div>
 ```
 
-The action is only called once (but not during server-side rendering) — it will _not_ run again if the argument changes.
+The action is only called once — it will _not_ run again if the argument changes.
 
 > [!LEGACY]
 > Prior to the `$effect` rune, actions could return an object with `update` and `destroy` methods, where `update` would be called with the latest value of the argument if it changed. Using effects is preferred.

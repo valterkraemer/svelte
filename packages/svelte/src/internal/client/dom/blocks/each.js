@@ -4,18 +4,8 @@ import {
 	EACH_IS_ANIMATED,
 	EACH_IS_CONTROLLED,
 	EACH_ITEM_IMMUTABLE,
-	EACH_ITEM_REACTIVE,
-	HYDRATION_END,
-	HYDRATION_START_ELSE
+	EACH_ITEM_REACTIVE
 } from '../../../../constants.js';
-import {
-	hydrate_next,
-	hydrate_node,
-	hydrating,
-	remove_nodes,
-	set_hydrate_node,
-	set_hydrating
-} from '../hydration.js';
 import {
 	clear_text_content,
 	create_text,
@@ -121,13 +111,7 @@ export function each(node, flags, get_collection, get_key, render_fn, fallback_f
 	if (is_controlled) {
 		var parent_node = /** @type {Element} */ (node);
 
-		anchor = hydrating
-			? set_hydrate_node(/** @type {Comment | Text} */ (get_first_child(parent_node)))
-			: parent_node.appendChild(create_text());
-	}
-
-	if (hydrating) {
-		hydrate_next();
+		anchor = parent_node.appendChild(create_text());
 	}
 
 	/** @type {Effect | null} */
@@ -153,81 +137,17 @@ export function each(node, flags, get_collection, get_key, render_fn, fallback_f
 		}
 		was_empty = length === 0;
 
-		/** `true` if there was a hydration mismatch. Needs to be a `let` or else it isn't treeshaken out */
-		let mismatch = false;
-
-		if (hydrating) {
-			var is_else = /** @type {Comment} */ (anchor).data === HYDRATION_START_ELSE;
-
-			if (is_else !== (length === 0)) {
-				// hydration mismatch — remove the server-rendered DOM and start over
-				anchor = remove_nodes();
-
-				set_hydrate_node(anchor);
-				set_hydrating(false);
-				mismatch = true;
-			}
-		}
-
-		// this is separate to the previous block because `hydrating` might change
-		if (hydrating) {
-			/** @type {EachItem | null} */
-			var prev = null;
-
-			/** @type {EachItem} */
-			var item;
-
-			for (var i = 0; i < length; i++) {
-				if (
-					hydrate_node.nodeType === 8 &&
-					/** @type {Comment} */ (hydrate_node).data === HYDRATION_END
-				) {
-					// The server rendered fewer items than expected,
-					// so break out and continue appending non-hydrated items
-					anchor = /** @type {Comment} */ (hydrate_node);
-					mismatch = true;
-					set_hydrating(false);
-					break;
-				}
-
-				var value = array[i];
-				var key = get_key(value, i);
-				item = create_item(
-					hydrate_node,
-					state,
-					prev,
-					null,
-					value,
-					key,
-					i,
-					render_fn,
-					flags,
-					get_collection
-				);
-				state.items.set(key, item);
-
-				prev = item;
-			}
-
-			// remove excess nodes
-			if (length > 0) {
-				set_hydrate_node(remove_nodes());
-			}
-		}
-
-		if (!hydrating) {
-			var effect = /** @type {Effect} */ (active_reaction);
-			reconcile(
-				array,
-				state,
-				anchor,
-				render_fn,
-				flags,
-				(effect.f & INERT) !== 0,
-				get_key,
-				get_collection
-			);
-		}
+		var effect = /** @type {Effect} */ (active_reaction);
+		reconcile(
+			array,
+			state,
+			anchor,
+			render_fn,
+			flags,
+			(effect.f & INERT) !== 0,
+			get_key,
+			get_collection
+		);
 
 		if (fallback_fn !== null) {
 			if (length === 0) {
@@ -243,11 +163,6 @@ export function each(node, flags, get_collection, get_key, render_fn, fallback_f
 			}
 		}
 
-		if (mismatch) {
-			// continue in hydration mode
-			set_hydrating(true);
-		}
-
 		// When we mount the each block for the first time, the collection won't be
 		// connected to this effect as the effect hasn't finished running yet and its deps
 		// won't be assigned. However, it's possible that when reconciling the each block
@@ -256,10 +171,6 @@ export function each(node, flags, get_collection, get_key, render_fn, fallback_f
 		// will now be `CLEAN`.
 		get_collection();
 	});
-
-	if (hydrating) {
-		anchor = hydrate_node;
-	}
 }
 
 /**
@@ -556,7 +467,7 @@ function create_item(
 	current_each_item = item;
 
 	try {
-		item.e = branch(() => render_fn(anchor, v, i), hydrating);
+		item.e = branch(() => render_fn(anchor, v, i), false);
 
 		item.e.prev = prev && prev.e;
 		item.e.next = next && next.e;

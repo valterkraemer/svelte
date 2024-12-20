@@ -29,7 +29,7 @@ function mkdirp(dir) {
 const svelte_modules = glob('**/*.svelte', { cwd: `${cwd}/src` });
 const js_modules = glob('**/*.js', { cwd: `${cwd}/src` });
 
-for (const generate of /** @type {const} */ (['client', 'server'])) {
+for (const generate of /** @type {const} */ (['client'])) {
 	console.error(`\n--- generating ${generate} ---\n`);
 	for (const file of svelte_modules) {
 		const input = `${cwd}/src/${file}`;

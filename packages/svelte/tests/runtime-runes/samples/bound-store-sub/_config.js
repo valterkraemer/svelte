@@ -8,7 +8,6 @@ export default test({
 	},
 
 	html: `<p><input type="number"></p>\n{"count":0}`,
-	ssrHtml: `<p><input type="number" value="0"></p>\n{"count":0}`,
 
 	test({ assert, target }) {
 		const input = target.querySelector('input');

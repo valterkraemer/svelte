@@ -2,7 +2,7 @@ import { ok, test } from '../../test';
 
 // test select binding behavior when a selected option is removed
 export default test({
-	mode: ['client', 'hydrate'],
+	mode: ['client'],
 
 	html: `<p>selected: a</p><select><option value="a">a</option><option value="b">b</option><option value="c">c</option></select>`,
 

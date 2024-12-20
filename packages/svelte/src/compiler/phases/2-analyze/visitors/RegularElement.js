@@ -132,11 +132,7 @@ export function RegularElement(node, context) {
 				if (ancestor.type === 'RegularElement' && ancestor.name === context.state.parent_element) {
 					const message = is_tag_valid_with_parent(node.name, context.state.parent_element);
 					if (message) {
-						if (only_warn) {
-							w.node_invalid_placement_ssr(node, message);
-						} else {
-							e.node_invalid_placement(node, message);
-						}
+						e.node_invalid_placement(node, message);
 					}
 
 					past_parent = true;
@@ -146,11 +142,7 @@ export function RegularElement(node, context) {
 
 				const message = is_tag_valid_with_ancestor(node.name, ancestors);
 				if (message) {
-					if (only_warn) {
-						w.node_invalid_placement_ssr(node, message);
-					} else {
-						e.node_invalid_placement(node, message);
-					}
+					e.node_invalid_placement(node, message);
 				}
 			} else if (
 				ancestor.type === 'Component' ||

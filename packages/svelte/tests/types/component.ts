@@ -5,11 +5,9 @@ import {
 	type ComponentProps,
 	type ComponentType,
 	mount,
-	hydrate,
 	type Component,
 	type ComponentInternals
 } from 'svelte';
-import { render } from 'svelte/server';
 
 SvelteComponent.element === HTMLElement;
 
@@ -140,46 +138,6 @@ mount(
 // if component receives no args, props can be omitted
 mount(null as any as typeof SvelteComponent<{}>, { target: null as any });
 
-hydrate(NewComponent, {
-	target: null as any as Document | Element | ShadowRoot,
-	props: {
-		prop: 'foo',
-		// @ts-expect-error
-		x: ''
-	},
-	events: {
-		event: (e) =>
-			// we're not type checking this as it's an edge case and removing the generic later would be an annoying mini breaking change
-			e.doesNotExist
-	},
-	immutable: true,
-	intro: false,
-	recover: false
-});
-hydrate(
-	NewComponent,
-	// @ts-expect-error props missing
-	{ target: null as any }
-);
-// if component receives no args, props can be omitted
-hydrate(null as any as typeof SvelteComponent<{}>, { target: null as any });
-
-render(NewComponent, {
-	props: {
-		prop: 'foo',
-		// @ts-expect-error
-		x: ''
-	}
-});
-// @ts-expect-error
-render(NewComponent);
-render(NewComponent, {
-	props: {
-		// @ts-expect-error
-		prop: 1
-	}
-});
-
 // --------------------------------------------------------------------------- interop
 
 const AsLegacyComponent = asClassComponent(newComponent);
@@ -213,7 +171,6 @@ asLegacyComponent.$$prop_def.x = '';
 asLegacyComponent.anExport;
 const x: typeof asLegacyComponent = createClassComponent({
 	target: null as any,
-	hydrate: true,
 	component: NewComponent
 });
 
@@ -290,52 +247,6 @@ mount(
 );
 // if component receives no args, props can be omitted
 mount(null as any as Component<{}>, { target: null as any });
-
-hydrate(functionComponent, {
-	target: null as any as Document | Element | ShadowRoot,
-	props: {
-		binding: true,
-		readonly: 'foo',
-		// would be nice to error here, probably needs NoInfer type helper in upcoming TS 5.5
-		x: ''
-	}
-});
-hydrate(functionComponent, {
-	target: null as any as Document | Element | ShadowRoot,
-	// @ts-expect-error missing prop
-	props: {
-		binding: true
-	}
-});
-hydrate(
-	functionComponent,
-	// @ts-expect-error props missing
-	{ target: null as any }
-);
-// if component receives no args, props can be omitted
-hydrate(null as any as Component<{}>, { target: null as any });
-
-render(functionComponent, {
-	props: {
-		binding: true,
-		readonly: 'foo'
-	}
-});
-// @ts-expect-error
-render(functionComponent);
-render(functionComponent, {
-	// @ts-expect-error
-	props: {
-		binding: true
-	}
-});
-render(functionComponent, {
-	props: {
-		binding: true,
-		// @ts-expect-error
-		readonly: 1
-	}
-});
 
 // --------------------------------------------------------------------------- *.svelte components
 

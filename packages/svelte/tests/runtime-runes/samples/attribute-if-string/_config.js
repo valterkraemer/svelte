@@ -1,7 +1,7 @@
 import { test } from '../../test';
 
 export default test({
-	test({ assert, target, variant, hydrate }) {
+	test({ assert, target, variant }) {
 		function check(/** @type {boolean} */ condition) {
 			const divs = /** @type {NodeListOf<HTMLDivElement>} */ (
 				target.querySelectorAll(`.translate-${condition} div`)
@@ -14,11 +14,5 @@ export default test({
 
 		check(false);
 		check(true);
-
-		if (variant === 'hydrate') {
-			hydrate();
-			check(false);
-			check(true);
-		}
 	}
 });

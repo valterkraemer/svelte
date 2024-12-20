@@ -1,7 +1,7 @@
 import { test } from '../../test';
 
 export default test({
-	mode: ['client', 'server'],
+	mode: ['client'],
 
 	html: '<div>d2: 3</div><div>d3: 3</div><div>d4: 3</div>',
 

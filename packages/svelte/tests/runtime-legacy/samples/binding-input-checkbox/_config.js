@@ -11,11 +11,6 @@ export default test({
 		<p>true</p>
 	`,
 
-	ssrHtml: `
-		<input type="checkbox" checked>
-		<p>true</p>
-	`,
-
 	test({ assert, component, target, window }) {
 		const input = target.querySelector('input');
 		ok(input);

@@ -11,15 +11,7 @@ export default test({
 		<button>change to number</button>
 		<button>change to range</button>
 	`,
-	ssrHtml: `
-		<input type=text value=x>
-		<input type=text value=y>
-		<p>x / y</p>
 
-		<button>change to text</button>
-		<button>change to number</button>
-		<button>change to range</button>
-	`,
 	async test({ assert, target }) {
 		const [in1, in2] = target.querySelectorAll('input');
 		const [btn1, btn2, btn3] = target.querySelectorAll('button');

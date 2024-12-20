@@ -28,14 +28,9 @@ const common = {
 	dev: boolean(false),
 
 	generate: validator('client', (input, keypath) => {
-		if (input === 'dom' || input === 'ssr') {
-			warn_once(w.options_renamed_ssr_dom);
-			return input === 'dom' ? 'client' : 'server';
-		}
-
 		// TODO deprecate `false` in favour of `analyze`/`analyzeModule` https://github.com/sveltejs/svelte-octane/issues/655
-		if (input !== 'client' && input !== 'server' && input !== false) {
-			throw_error(`${keypath} must be "client", "server" or false`);
+		if (input !== 'client' && input !== false) {
+			throw_error(`${keypath} must be "client" or false`);
 		}
 
 		return input;
@@ -123,7 +118,6 @@ export const validate_component_options =
 			}),
 
 			enableSourcemap: warn_removed(w.options_removed_enable_sourcemap),
-			hydratable: warn_removed(w.options_removed_hydratable),
 			format: removed(
 				'The format option has been removed in Svelte 4, the compiler only outputs ESM now. Remove "format" from your compiler options. ' +
 					'If you did not set this yourself, bump the version of your bundler plugin (vite-plugin-svelte/rollup-plugin-svelte/svelte-loader)'

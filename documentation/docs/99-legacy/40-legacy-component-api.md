@@ -35,14 +35,9 @@ The following initialisation options can be provided:
 | `anchor`  | `null`      | A child of `target` to render the component immediately before                                       |
 | `props`   | `{}`        | An object of properties to supply to the component                                                   |
 | `context` | `new Map()` | A `Map` of root-level context key-value pairs to supply to the component                             |
-| `hydrate` | `false`     | See below                                                                                            |
 | `intro`   | `false`     | If `true`, will play transitions on initial render, rather than waiting for subsequent state changes |
 
 Existing children of `target` are left where they are.
-
-The `hydrate` option instructs Svelte to upgrade existing DOM (usually from server-side rendering) rather than creating new elements. It will only work if the component was compiled with the [`hydratable: true` option](/docs/svelte-compiler#compile). Hydration of `<head>` elements only works properly if the server-side rendering code was also compiled with `hydratable: true`, which adds a marker to each element in the `<head>` so that the component knows which elements it's responsible for removing during hydration.
-
-Whereas children of `target` are normally left alone, `hydrate: true` will cause any children to be removed. For that reason, the `anchor` option cannot be used alongside `hydrate: true`.
 
 The existing DOM doesn't need to match the component — Svelte will 'repair' the DOM as it goes.
 
@@ -52,8 +47,7 @@ The existing DOM doesn't need to match the component — Svelte will 'repair' th
 import App from './App.svelte';
 
 const app = new App({
-	target: document.querySelector('#server-rendered-html'),
-	hydrate: true
+	target: document.querySelector('#server-rendered-html')
 });
 ```
 

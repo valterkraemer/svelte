@@ -26,7 +26,6 @@ export default async function (target) {
 				target,
 				props: config.props,
 				intro: config.intro,
-				hydrate: __HYDRATE__,
 				recover: false
 			},
 			config.options || {}
